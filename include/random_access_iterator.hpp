@@ -18,11 +18,18 @@ namespace ft
 	{
 		public :
 	
-		typedef ptrdiff_t							difference_type;          
-		typedef T									value_type;     
-		typedef T*			            		    pointer;             
-		typedef T&									reference;          
-		typedef random_access_iterator_tag			iterator_category;
+		typedef ft::iterator_traits<T>::value_type		value_type;     
+		typedef ft::iterator_traits<T>::difference_type	difference_type;          
+		typedef ft::iterator_traits<T>::reference		reference;          
+		typedef T*										pointer;             
+		typedef ft::random_access_iterator_tag			iterator_category;
 		
+		random_access_iterator();
+		random_access_iterator(T *ptr);
+		random_access_iterator(const random_access_iterator &src);
+		~random_access_iterator();
+		random_access_iterator &operator=(const random_access_iterator &rhs);
+		
+
 	}
 }
