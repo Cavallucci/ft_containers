@@ -16,20 +16,120 @@ namespace ft
 	templace <class T>
 	class random_access_iterator
 	{
+		private :
+
+		pointer _ptr;
+
 		public :
 	
 		typedef ft::iterator_traits<T>::value_type		value_type;     
-		typedef ft::iterator_traits<T>::difference_type	difference_type;          
+		typedef ft::iterator_traits<T>::difference_type	difference_type;
 		typedef ft::iterator_traits<T>::reference		reference;          
-		typedef T*										pointer;             
+		typedef T*										pointer;           
 		typedef ft::random_access_iterator_tag			iterator_category;
 		
-		random_access_iterator();
-		random_access_iterator(T *ptr);
-		random_access_iterator(const random_access_iterator &src);
-		~random_access_iterator();
-		random_access_iterator &operator=(const random_access_iterator &rhs);
-		
+/*============================MEMBER FUNCTIONS================================*/
 
-	}
+		random_access_iterator() {_ptr = 0;};
+
+		random_access_iterator(T *ptr): _ptr(ptr) {};
+
+		random_access_iterator(const random_access_iterator &src) : _ptr(src._ptr){};
+
+		random_access_iterator &operator=(const random_access_iterator &rhs){
+			if (this!= &rhs)
+				_ptr = rhs._ptr;
+			return (*this);};
+
+		virtual ~random_access_iterator(){};
+
+		operator random_access_iterator<T const>() const {
+			return (random_access_iterator<T const>(_ptr));};
+		
+		reference	operator*() const{
+			return (*_ptr);}
+		
+		random_access_iterator &operator+(difference_type n) const {
+			return (random_access_iterator(_ptr + n));};
+
+		random_access_iterator &operator-(difference_type n) const {
+			return (random_access_iterator(_ptr - n));};
+
+		random_access_iterator &operator++(){
+			++_ptr;
+			return (*this);};
+		
+		random_access_iterator &operator++(int) {
+			random_access_iterator tmp = *this;
+			++(*this);
+			return (tmp);};
+		
+		random_access_iterator &operator--(){
+			--_ptr;
+			return (*this);};
+
+		random_access_iterator &operator--(int) {
+			random_access_iterator tmp = *this;
+			--(*this);
+			return (tmp);};
+
+		random_access_iterator &operator+=(difference_type n){
+			_ptr += n;
+			return (*this);};
+		
+		random_access_iterator &operator-=(difference_type n){
+			_ptr -= n;
+			return (*this);};
+
+		pointer	operator->() const {
+			return (&(operator *()));};
+
+		reference operator[](difference_type n) const {
+			return (_ptr[n]);};
+		
+		pointer base() const {
+			return (_ptr);};
+		
+		friend std::ostream &operator<<(std::ostream &o, random_access_iterator<T> &rhs)
+		{o << *rhs._ptr;
+			return (o);};
+		
+		template <class T>
+		random_access_iterator<T>::operator		random_access_iterator<const typename random_access_iterator<T>::value_type> (void) const
+			{ return (random_access_iterator<const T>(this->base()));};
+	};
+
+/*============================NON-MEMBER FUNCTIONS=============================*/
+
+template< class Iterator1, class Iterator2 >
+bool operator==( const random_access_iterator<Iterator1>& lhs,
+                 const random_access_iterator<Iterator2>& rhs )
+				 { return (lhs.base() == rhs.base());};
+
+template< class Iterator1, class Iterator2 >
+bool operator!=( const std::random_access_iterator<Iterator1>& lhs,
+                 const std::random_access_iterator<Iterator2>& rhs )
+				 { return (lhs.base() != rhs.base());};
+
+template< class Iterator1, class Iterator2 >
+bool operator<( const std::random_access_iterator<Iterator1>& lhs,
+                const std::random_access_iterator<Iterator2>& rhs )
+				{ return (lhs.base() < rhs.base());};
+
+template< class Iterator1, class Iterator2 >
+bool operator<=( const std::random_access_iterator<Iterator1>& lhs,
+                 const std::random_access_iterator<Iterator2>& rhs )
+				{ return (lhs.base() <= rhs.base());};
+
+template< class Iterator1, class Iterator2 >
+bool operator>( const std::random_access_iterator<Iterator1>& lhs,
+                const std::random_access_iterator<Iterator2>& rhs );
+				{ return (lhs.base() > rhs.base());};
+
+template< class Iterator1, class Iterator2 >
+bool operator>=( const std::random_access_iterator<Iterator1>& lhs,
+                 const std::random_access_iterator<Iterator2>& rhs );
+				{ return (lhs.base() >= rhs.base());};
 }
+
+#endif
