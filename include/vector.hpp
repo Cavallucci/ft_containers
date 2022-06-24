@@ -2,23 +2,58 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include "access_iter.hpp"
+#include "iterator_traits.hpp"
 
 namespace ft
 {
 	template <class T, class Allocator = std::allocator<T> >
 	class vector
 	{
-/*---------------------------------MEMBER-------------------------------------*/
+/*---------------------------------MEMBER TYPE-------------------------------------*/
 		public :
-			typedef T										value_type;
-			typedef Allocator								allocator_type;
-			typedef size_t									size_type;
-			typedef ptrdiff_t								difference_type;
-			typedef T										&reference;
-			typedef T const									&value_type;
-			typedef allocator_type::pointer					pointer;
-			typedef allocator_type::const_pointer			const_pointer;
-//			typedef	 
+			typedef T											value_type;
+			typedef Allocator									allocator_type;
+			typedef size_t										size_type;
+			typedef std::ptrdiff_t									difference_type;
+			typedef T											&reference;
+			typedef T const										&value_type;
+			typedef allocator_type::pointer						pointer;
+			typedef allocator_type::const_pointer				const_pointer;
+			typedef random_access_iterator<value_type>			iterator;
+			typedef random_access_iterator<const value_type>	const_iterator;
+//			typedef reverse_iterator<const_iterator>			const_reverse_iterator;
+//			typedef reverse_iterator<iterator>					reverse_iterator;
+
+/*--------------------------------MEMBER FUNCTION--------------------------------*/
+
+	// default :
+		vector() : _alloc(NULL), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
+//		explicit vector (const allocator_type &alloc);
+//		vector (vector &&other);
+		~vector()
+			{	clear();
+				_alloc.deallocate(_start, capacity());};
+
+	// Element access :
+
+	// Iterators :
+
+	// Capacity :
+
+	//Modifiers :
+
+	private :
+		Allocator	_alloc;
+		pointer		_start;
+		size_type	_size;
+		size_type	_capacity;
+		pointer		_end;
 	}
+/*--------------------------------NON-MEMBER FUNCTION--------------------------------*/
+// operators :
+
+// swap :
+
+// erase :
+
 }
