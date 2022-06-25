@@ -1,7 +1,7 @@
-/*#include <iostream>
+#include <iostream>
 #include <string>
 #include <deque>
-if 1 //CREATE A REAL STL EXAMPLE
+/*if 1 //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
@@ -118,10 +118,9 @@ int main(int argc, char** argv) {
 #include "iterator_traits.hpp"
 #include "random_access_iterator.hpp"
 #include "vector.hpp"
-#include <iostream>
 
 int main()
 {
-    ft::vector	vec;
+    ft::vector<int>	v;
 	std::cout << "ok\n";
 }

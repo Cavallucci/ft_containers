@@ -20,9 +20,9 @@ namespace ft
 		public :
 	
 		typedef T								value_type;     
-		typedef std::ptrdiff_t						difference_type;
+		typedef std::ptrdiff_t					difference_type;
 		typedef T&								reference;          
-		typedef T*								pointer;           
+		typedef T* 								pointer;           
 		typedef ft::random_access_iterator_tag	iterator_category;
 
 		operator										random_access_iterator<const value_type>(void) const;

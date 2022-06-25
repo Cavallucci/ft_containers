@@ -1,18 +1,18 @@
-#ifndef ACCESS_ITER_HPP
-#define ACCESS_ITER_HPP
+#ifndef ITERATOR_TRAITS_HPP
+#define ITERATOR_TRAITS_HPP
 
 #include "random_access_iterator.hpp"
 
 namespace ft
 {
-	template <class Iter>                     
+	template <class Iterator>                     
 		struct iterator_traits
 	{
-		typedef typename Iter::difference_type			difference_type;
-		typedef typename Iter::value_type				value_type;     
-		typedef typename Iter::pointer	                pointer;             
-		typedef typename Iter::reference				reference;          
-		typedef typename Iter::iterator_category		iterator_category;
+		typedef typename Iterator::difference_type			difference_type;
+		typedef typename Iterator::value_type				value_type;     
+		typedef typename Iterator::pointer	                pointer;             
+		typedef typename Iterator::reference				reference;          
+		typedef typename Iterator::iterator_category		iterator_category;
 	};
 
 	template <class T>
