@@ -41,9 +41,6 @@ namespace ft
 			return (*this);};
 
 		virtual ~random_access_iterator(){};
-
-		//operator random_access_iterator<T const>() const {
-		//	return (random_access_iterator<T const>(_ptr));};
 		
 		reference	operator*() const{
 			return (*_ptr);}

@@ -33,9 +33,6 @@ namespace ft
 			return (*this);};
 
 		virtual ~reverse_iterator(){};
-
-		//operator reverse_iterator<Iterator const>() const {
-		//	return (reverse_iterator<Iterator const>(_ptr));};
 		
 		reference	operator*() const{
 			return (*_ptr);}
