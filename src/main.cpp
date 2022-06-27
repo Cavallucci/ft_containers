@@ -117,10 +117,29 @@ int main(int argc, char** argv) {
 
 #include "iterator_traits.hpp"
 #include "random_access_iterator.hpp"
-#include "vector.hpp"
+//#include "vector.hpp"
+#include <vector>
 
 int main()
 {
-    ft::vector<int>	v;
-	std::cout << "ok\n";
+    std::vector<char>	characters;
+	
+	const std::string extra(6, 'b');
+
+	characters.assign(8, 'a');
+	for(size_t i = 0; i < characters.size(); i++)
+    	std::cout << characters[i] << ' ';
+	std::cout << std::endl;
+
+	characters.assign(5, 'b');
+	for(size_t i = 0; i < characters.size(); i++)
+    	std::cout << characters[i] << ' ';
+	std::cout << std::endl;
+
+    // characters.assign(extra.begin(), extra.end());
+	// for(size_t i = 0; i < characters.size(); i++)
+    // 	std::cout << characters[i] << ' ';
+	// std::cout << std::endl;
+
+	//std::cout << "ok\n";
 }

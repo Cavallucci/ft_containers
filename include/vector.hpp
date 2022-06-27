@@ -29,9 +29,9 @@ namespace ft
 
 /*--------------------------------MEMBER FUNCTION--------------------------------*/
 
-	//----------default :
+//--------------default :
 	
-	//Constructors :
+	//-----Constructors :
 
 		//empty
 		vector() : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
@@ -78,22 +78,86 @@ namespace ft
 			_capacity = _size * 2;
 		};
 
-		// destructor :
-		~vector() {};
-	//	{	clear();
-	//		_alloc.deallocate(_start, capacity());};
+	//-----Destructor :
 
-		vector	&operator=(vector &other) {
-			*this = other;
-		}
+		~vector()
+		{	
+			clear();
+			_alloc.deallocate(_start, capacity());
+		};
 
-	//-----------Element access :
+	//-----Operator= :
 
-	//-----------Iterators :
+		/*vector	&operator=(vector &other)
+		{
+			if (other == *this)
+				return (*this);
+			this->clear();
+			th
+			_alloc = other._alloc;
+			_size = other._size;
+			_start = other._start;
+			_end = other._end;
+			_capacity = other._capacity;
+			return (*this);
+		};*/
+	
+	//-----Assign :
 
-	//-----------Capacity :
+		//range :
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last)
+		{
+			if (_start)
+				clear();
+			insert(begin(), first, last);
+		};
 
-	//-----------Modifiers :
+		//fill :
+		void assign (size_t n, const value_type& val)
+		{
+			if (_start)
+				clear();
+			insert(begin(), n, val());
+		};
+	
+	//-----Get_allocator :
+
+		allocator_type get_allocator() const;
+
+//---------------Element access :
+	
+//---------------Iterators :
+
+//---------------Capacity :
+
+	//-----Capacity :
+		size_type capacity() const
+		{ return (this->_capacity);};
+
+//---------------Modifiers :
+
+	//-----Insert :
+		//single element
+		iterator insert( iterator pos, const T& value )
+		{
+			size_t	count = 1;
+
+			insert(pos, count, value);
+			return pos;
+		};
+
+		//fill :
+		void insert( iterator pos, size_type count, const T& value )
+		{
+			if (!count)
+				return;
+			
+		};
+
+		//range :
+		template <class InputIterator>
+    	void insert (iterator pos, InputIterator first, InputIterator last);
 
 	private :
 		Allocator	_alloc;
