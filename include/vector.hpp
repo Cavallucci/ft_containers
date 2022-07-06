@@ -135,6 +135,27 @@ namespace ft
 		size_type capacity() const
 		{ return (this->_capacity);};
 
+	//-----Reserve :
+		void reserve (size_type n)
+		{
+			if (n > _size)
+				throw std::length_error("vector::reserve");
+			if (n <= _capacity)
+				return ;
+
+			Allocator	tmp_alloc;
+			Pointer 	tmp_start = tmp_alloc.allocate(n);
+			
+			for (size_t i = 0; i < _size ; i++)
+			{
+				_alloc.construct(tmp_start + i, _start[i]);
+				_alloc.destroy(_start + i);
+			}
+			_alloc.deallocate(_start, capacity());
+			_start = tmp_start;
+			_end = _start + n;		
+		};
+
 //---------------Modifiers :
 
 	//-----Insert :
@@ -147,11 +168,19 @@ namespace ft
 			return pos;
 		};
 
-		//fill :
+		//fill :  inserts count copies of the value before pos
 		void insert( iterator pos, size_type count, const T& value )
 		{
+			size_t index = pos - _begin;
+
 			if (!count)
 				return;
+			if (_size + count > _capacity)
+				reserve(_size + count)
+			for (size_t i = _size; i > index; i--)
+			{
+				_alloc.construct(_start + i, )
+			}
 			
 		};
 
