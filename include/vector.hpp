@@ -88,19 +88,12 @@ namespace ft
 
 	//-----Operator= :
 
-		/*vector	&operator=(vector &other)
+		vector	&operator=(vector &other)
 		{
-			if (other == *this)
-				return (*this);
-			this->clear();
-			th
-			_alloc = other._alloc;
-			_size = other._size;
-			_start = other._start;
-			_end = other._end;
-			_capacity = other._capacity;
+			if (other != *this)
+				assign(other.begin(), other.end());
 			return (*this);
-		};*/
+		};
 	
 	//-----Assign :
 
@@ -129,7 +122,41 @@ namespace ft
 	
 //---------------Iterators :
 
+	//-----Begin :
+
+		//normal :
+		iterator begin()
+		{ return (iterator(_start));};
+
+		//const :
+		const_iterator begin() const
+		{ return (const_iterator(_start));};
+
+		//reverse :
+		reverse_iterator rbegin()
+		{ return (reverse_iterator(end()));};
 		
+		//const reverse :
+		const_reverse_iterator rbegin() const
+		{ return (const_reverse_iterator(end()));};
+
+	//-----End :
+
+		//normal :
+		iterator end()
+		{ return (iterator(_end));};
+
+		//const :
+		const_iterator end() const
+		{ return (const_iterator(_end));};	
+
+		//reverse :
+		reverse_iterator rend()
+		{ return (reverse_iterator(begin()));};
+
+		//const reverse :
+		const_reverse_iterator rend() const
+		{ return (const_reverse_iterator(begin()));};
 
 //---------------Capacity :
 
@@ -149,7 +176,7 @@ namespace ft
 				return ;
 
 			Allocator	tmp_alloc;
-			Pointer 	tmp_start = tmp_alloc.allocate(n);
+			pointer 	tmp_start = tmp_alloc.allocate(n);
 			
 			for (size_t i = 0; i < _size ; i++)
 			{
@@ -162,6 +189,17 @@ namespace ft
 		};
 
 //---------------Modifiers :
+
+	//-----Clear :
+		void clear()
+		{
+			if (_start)
+			{
+				for (size_t i = _size; i > 0; i--)
+					_alloc.destroy(_start + i);
+				_size = 0;
+			}
+		};
 
 	//-----Insert :
 		//single element
@@ -188,11 +226,9 @@ namespace ft
 				_alloc.construct(_start + i + count, *(_start + i)); // si _start == 0 et pas 1, rajouter -1
 				_alloc.destroy(_start + i); // pareil 
 			}
-			while (count != 0)
+			for (size_t i = 0; i < count; i++)
 			{
-				_alloc.construct(_start + i, value);
-				i++;
-				count--;
+				_alloc.construct(_start + index + i, value);
 				_size++;
 			}
 			_end = _start + _size;
