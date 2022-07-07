@@ -129,8 +129,13 @@ namespace ft
 	
 //---------------Iterators :
 
+		
+
 //---------------Capacity :
 
+	//-----Max size :
+		size_t	max_size()const {
+			return (_alloc.max_size());};
 	//-----Capacity :
 		size_type capacity() const
 		{ return (this->_capacity);};
@@ -138,7 +143,7 @@ namespace ft
 	//-----Reserve :
 		void reserve (size_type n)
 		{
-			if (n > _size)
+			if (n > max_size())
 				throw std::length_error("vector::reserve");
 			if (n <= _capacity)
 				return ;
@@ -171,16 +176,26 @@ namespace ft
 		//fill :  inserts count copies of the value before pos
 		void insert( iterator pos, size_type count, const T& value )
 		{
-			size_t index = pos - _begin;
+			size_t index = pos - _start;
 
 			if (!count)
 				return;
 			if (_size + count > _capacity)
-				reserve(_size + count)
+				reserve(_size + count);
+
 			for (size_t i = _size; i > index; i--)
 			{
-				_alloc.construct(_start + i, )
+				_alloc.construct(_start + i + count, *(_start + i)); // si _start == 0 et pas 1, rajouter -1
+				_alloc.destroy(_start + i); // pareil 
 			}
+			while (count != 0)
+			{
+				_alloc.construct(_start + i, value);
+				i++;
+				count--;
+				_size++;
+			}
+			_end = _start + _size;
 			
 		};
 

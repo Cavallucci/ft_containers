@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
 
 #include "iterator_traits.hpp"
 #include "random_access_iterator.hpp"
-//#include "vector.hpp"
+#include "vector.hpp"
 #include <vector>
 
 int main()
