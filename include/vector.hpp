@@ -120,6 +120,64 @@ namespace ft
 
 //---------------Element access :
 	
+	//-----At :
+
+		//normal :
+		reference at( size_type pos )
+		{
+			if (pos >= capacity())
+				throw std::out_of_range("vector:: Out of range");
+			return (*(_start + pos));
+		};
+
+		//const :
+		const_reference at(size_type pos) const
+		{
+			if (pos >= capacity())
+				throw std::out_of_range("vector:: Out of range");
+			return (*(_start + pos));
+		};
+
+	//-----Operator[] :
+
+		//normal :
+	    reference operator[] (size_type n)
+		{ return (_start[n]);};
+
+		//const :
+		const_reference operator[] (size_type n) const
+		{ return (_start[n]);};
+
+	//-----Front :
+
+		//normal :
+		reference front()
+		{ return (*_start);};
+
+		//const :
+		const_reference front() const
+		{ return (*_start);};
+
+	//-----Back :
+
+		//normal :
+	    reference back()
+		{ return (*_end);};
+
+		//const :
+		const_reference back() const
+		{ return (*_end);};
+
+	//-----Data :
+
+		//normal :
+		T* data()
+		{ return }
+
+		//const :
+		const T* data() const
+		{ return }
+
 //---------------Iterators :
 
 	//-----Begin :
@@ -160,9 +218,22 @@ namespace ft
 
 //---------------Capacity :
 
+	//-----Empty :
+		bool empty() const
+		{
+			if (_size == 0)
+				return (true);
+			return (false);
+		};
+
+	//-----Size :
+		size_type size() const
+		{ return (_size);};
+
 	//-----Max size :
 		size_t	max_size()const {
 			return (_alloc.max_size());};
+
 	//-----Capacity :
 		size_type capacity() const
 		{ return (this->_capacity);};
