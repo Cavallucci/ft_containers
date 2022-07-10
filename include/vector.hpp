@@ -172,11 +172,11 @@ namespace ft
 
 		//normal :
 		T* data()
-		{ return }
+		{ return (_start); };
 
 		//const :
 		const T* data() const
-		{ return }
+		{ return (_start); };
 
 //---------------Iterators :
 
@@ -308,7 +308,52 @@ namespace ft
 
 		//range :
 		template <class InputIterator>
-    	void insert (iterator pos, InputIterator first, InputIterator last);
+    	void insert (iterator pos, InputIterator first, InputIterator last)
+		{
+			size_t	count = last - first;
+
+			for (size_t	i = 0; i < count; i++)
+				insert(pos + i, _start + pos + i);
+
+			_size += count;
+			_end = _start + _size;		
+		};
+
+	//-----Erase :
+
+		//position :
+		iterator erase( iterator pos )
+		{ return (erase(pos, pos + 1));};
+
+		//first, last :
+		iterator erase( iterator first, iterator last )
+		{
+			size_t	count = first - last;
+			size_t	start = _start + first;
+			size_t	end = start + count;
+
+			while (start != end)
+			{
+				_alloc.destroy(_start + start);
+				if (_end != end)
+				{
+					insert(_start + start, start + count);
+					_alloc.destroy(_start + count);
+				}
+				start++;
+			}
+			_size -= count;
+			_end = _start + _size;
+		};
+
+	//-----Push_back :
+
+	//-----Pop_back :
+
+	//-----Resize :
+
+	//-----Swap :
+
 
 	private :
 		Allocator	_alloc;
