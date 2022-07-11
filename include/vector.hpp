@@ -231,8 +231,8 @@ namespace ft
 		{ return (_size);};
 
 	//-----Max size :
-		size_t	max_size()const {
-			return (_alloc.max_size());};
+		size_t	max_size()const 
+		{ return (_alloc.max_size());};
 
 	//-----Capacity :
 		size_type capacity() const
@@ -348,12 +348,58 @@ namespace ft
 
 	//-----Push_back :
 
+		void push_back (const value_type& val)
+		{ insert(end(), val);};
+
 	//-----Pop_back :
+
+		void pop_back()
+		{
+			_alloc.destroy(&back());
+			_size--;
+		};
 
 	//-----Resize :
 
+		void resize (size_type n, value_type val = value_type())
+		{
+			while (n < _size)
+				pop_back();
+			if (_size < n)
+				insert(end(), n - _size, val);
+		};
+
 	//-----Swap :
 
+		void swap( vector& other )
+		{
+			Allocator	tmp_alloc;
+			pointer		tmp_start;
+			size_type	tmp_size;
+			size_type	tmp_capacity;
+			pointer		tmp_end;
+
+			if (other != *this)
+			{
+				tmp_alloc = other._alloc;
+				tmp_start = other._start;
+				tmp_size = other._size;
+				tmp_capacity = other._capacity;
+				tmp_end = other._end;
+
+				other._alloc = _alloc;
+				other._start = _start;
+				other._size = _size;
+				other._capacity = _capacity;
+				other._end = _end;
+
+				_alloc = tmp_alloc;
+				_start = tmp_start;
+				_size = tmp_size;
+				_capacity = tmp_capacity;
+				_end = tmp_end;
+			}
+		};
 
 	private :
 		Allocator	_alloc;
@@ -363,12 +409,78 @@ namespace ft
 		pointer		_end;
 	};
 /*--------------------------------NON-MEMBER FUNCTION--------------------------------*/
-// operators :
+
+//-----Relational operators :
+
+	//== :
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		//The equality comparison (operator==) is performed by first comparing sizes,
+		// and if they match, the elements are compared sequentially using operator==,
+		// stopping at the first mismatch (as if using algorithm equal).
+
+		if (lhs._size != rhs._size)
+			return (false);
+
+		typename vector<T>::const_iterator tmp_lhs = lhs.begin();
+		typename vector<T>::const_iterator tmp_rhs = rhs.begin();
+
+		while (tmp_lhs != lhs.end() && tmp_rhs != rhs.end())
+		{
+			if (*tmp_lhs != *tmp_rhs)
+				return (false);
+			tmp_lhs++;
+			tmp_rhs++;
+		}
+		return (true);
+	};
+
+	//!= :
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{ return (!(lhs == rhs));};
+
+	//< :
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		typename vector<T>::const_iterator tmp_lhs = lhs.begin();
+		typename vector<T>::const_iterator tmp_rhs = rhs.begin();
+
+		while (tmp_lhs != lhs.end() && tmp_rhs != rhs.end())
+		{
+			if (*tmp_lhs >= *tmp_rhs)
+				return (false);
+			tmp_lhs++;
+			tmp_rhs++;
+		}
+		return (true);
+	};
+	
+	//<= :
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{ return (!(lhs > rhs));};
+
+	//> :
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{ return (rhs < lhs);};
+
+	//>= :
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{ return (!(lhs < rhs));};
 
 // swap :
 
-// erase :
-
+template <class T, class Alloc>
+void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+{
+	if (x != y)
+		x.swap(y);
+};
 }
 
 #endif
