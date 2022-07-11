@@ -52,10 +52,9 @@ namespace ft
 			_capacity = count * 2;
 			_end = _start + _size;
 			
-			value = 0; //---> ligne a supprimer
-		//	int i = -1;
-		//	while (i++ < n)
-		//		_alloc.construct(_start + i, value);
+			size_t i = -1;
+			while (i++ < count)
+				_alloc.construct(_start + i, value);
 		};
 
 		//range constructor
@@ -311,9 +310,10 @@ namespace ft
     	void insert (iterator pos, InputIterator first, InputIterator last)
 		{
 			size_t	count = last - first;
+			size_t	index = pos - _start;
 
 			for (size_t	i = 0; i < count; i++)
-				insert(pos + i, _start + pos + i);
+				insert( iterator(pos + i), _start + index + i); //start+pos
 
 			_size += count;
 			_end = _start + _size;		
