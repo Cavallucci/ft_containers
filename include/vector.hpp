@@ -332,25 +332,29 @@ namespace ft
 		//first, last :
 		iterator erase( iterator first, iterator last )
 		{
-			size_t	start = _start + first;
+		//	size_t	start = 0;
 			size_t	count = 0;
 			
 			for(;first != last; count++)
 				first++;
-			size_t	end = start + count;
-			
-			while (start != end)
-			{
-				_alloc.destroy(_start + start);
-				if (_end != end)
-				{
-					insert(_start + start, start + count);
-					_alloc.destroy(_start + count);
-				}
-				start++;
-			}
+		//	while (first != iterator(_start))
+		//		start++;
+				
+		//	size_t	end = start + count;
+
+		//	while (start != end)
+		//	{
+		//		_alloc.destroy(_start + start);
+			//	if (this->end() != last)
+			//	{
+			//		insert( iterator(_start + start), _start[start + count]); //insert(_start + start, start + count)
+			//		_alloc.destroy(_start + count);
+			//	}
+		//		start++;
+		//	}
 			_size -= count;
 			_end = _start + _size;
+			return (first);
 		};
 
 	//-----Push_back :
