@@ -45,17 +45,17 @@ namespace ft
 		reference	operator*() const{
 			return (*_ptr);}
 		
-		random_access_iterator &operator+(difference_type n) const {
+		random_access_iterator operator+(difference_type n) const {
 			return (random_access_iterator(_ptr + n));};
 
-		random_access_iterator &operator-(difference_type n) const {
+		random_access_iterator operator-(difference_type n) const {
 			return (random_access_iterator(_ptr - n));};
 
 		random_access_iterator &operator++(){
 			++_ptr;
 			return (*this);};
 		
-		random_access_iterator &operator++(int) {
+		random_access_iterator operator++(int) {
 			random_access_iterator tmp = *this;
 			++(*this);
 			return (tmp);};
@@ -64,7 +64,7 @@ namespace ft
 			--_ptr;
 			return (*this);};
 
-		random_access_iterator &operator--(int) {
+		random_access_iterator operator--(int) {
 			random_access_iterator tmp = *this;
 			--(*this);
 			return (tmp);};

@@ -284,7 +284,7 @@ namespace ft
 		//fill :  inserts count copies of the value before pos
 		void insert( iterator pos, size_type count, const T& value )
 		{
-			size_t index = pos - _start;
+			size_t index = pos - begin();
 
 			if (!count)
 				return;
@@ -306,14 +306,18 @@ namespace ft
 		};
 
 		//range :
+
 		template <class InputIterator>
     	void insert (iterator pos, InputIterator first, InputIterator last)
 		{
-			size_t	count = last - first;
-			size_t	index = pos - _start;
+			size_t	index = pos - begin();
+			size_t	count = 0;
+			
+			for(;first != last; count++)
+				first++;
 
 			for (size_t	i = 0; i < count; i++)
-				insert( iterator(pos + i), _start + index + i); //start+pos
+				insert( iterator(pos + i), _start[index + i]); //start+pos
 
 			_size += count;
 			_end = _start + _size;		
@@ -328,10 +332,13 @@ namespace ft
 		//first, last :
 		iterator erase( iterator first, iterator last )
 		{
-			size_t	count = first - last;
 			size_t	start = _start + first;
+			size_t	count = 0;
+			
+			for(;first != last; count++)
+				first++;
 			size_t	end = start + count;
-
+			
 			while (start != end)
 			{
 				_alloc.destroy(_start + start);
@@ -420,7 +427,7 @@ namespace ft
 		// and if they match, the elements are compared sequentially using operator==,
 		// stopping at the first mismatch (as if using algorithm equal).
 
-		if (lhs._size != rhs._size)
+		if (lhs.size() != rhs.size())
 			return (false);
 
 		typename vector<T>::const_iterator tmp_lhs = lhs.begin();
