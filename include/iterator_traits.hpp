@@ -2,12 +2,15 @@
 #define ITERATOR_TRAITS_HPP
 
 #include "random_access_iterator.hpp"
+#include "iterator.hpp"
 
 namespace ft
 {
 	template <class Iterator>                     
 		struct iterator_traits
 	{
+		public :
+
 		typedef typename Iterator::difference_type			difference_type;
 		typedef typename Iterator::value_type				value_type;     
 		typedef typename Iterator::pointer	                pointer;             
@@ -18,6 +21,8 @@ namespace ft
 	template <class T>
 		struct iterator_traits<T*>
 	{
+		public :
+
 		typedef std::ptrdiff_t								difference_type;
 		typedef T										value_type;     
 		typedef T*				            		    pointer;             
@@ -28,6 +33,8 @@ namespace ft
 	template <class T>
 		struct iterator_traits<const T*>
 	{
+		public :
+
 		typedef std::ptrdiff_t								difference_type;
 		typedef T										value_type;     
 		typedef const T*		        		        pointer;             

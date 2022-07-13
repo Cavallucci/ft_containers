@@ -6,6 +6,7 @@
 #include "iterator_traits.hpp"
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "iterator.hpp"
 
 namespace ft
 {
@@ -332,26 +333,27 @@ namespace ft
 		//first, last :
 		iterator erase( iterator first, iterator last )
 		{
-		//	size_t	start = 0;
-			size_t	count = 0;
-			
+			size_t		start = 0;
+			size_t		count = 0;
+			iterator	tmp_first = first;
+
 			for(;first != last; count++)
 				first++;
-		//	while (first != iterator(_start))
-		//		start++;
+			while (tmp_first != iterator(_start + start))
+				start++;
 				
-		//	size_t	end = start + count;
+			size_t	end = start + count;
 
-		//	while (start != end)
-		//	{
-		//		_alloc.destroy(_start + start);
-			//	if (this->end() != last)
-			//	{
-			//		insert( iterator(_start + start), _start[start + count]); //insert(_start + start, start + count)
-			//		_alloc.destroy(_start + count);
-			//	}
-		//		start++;
-		//	}
+			while (start != end)
+			{
+				_alloc.destroy(_start + start);
+				if (this->end() != last)
+				{
+					insert( iterator(_start + start), _start[start + count]); //insert(_start + start, start + count)
+					_alloc.destroy(_start + count);
+				}
+				start++;
+			}
 			_size -= count;
 			_end = _start + _size;
 			return (first);

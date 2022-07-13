@@ -11,8 +11,9 @@ namespace ft
 	{
 		public :
 	
-		typedef typename ft::iterator_traits<Iterator>::value_type			value_type;     
+		typedef Iterator													iterator_type;
 		typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+		typedef typename ft::iterator_traits<Iterator>::value_type			value_type;     
 		typedef typename ft::iterator_traits<Iterator>::reference			reference;          
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;           
 		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
@@ -23,7 +24,7 @@ namespace ft
 
 		reverse_iterator() {_ptr = 0;};
 
-		reverse_iterator(Iterator *ptr): _ptr(ptr) {};
+		reverse_iterator(Iterator ptr): _ptr(ptr) {};
 
 		reverse_iterator(const reverse_iterator &src) : _ptr(src._ptr){};
 
