@@ -6,7 +6,6 @@
 
 namespace ft
 {
-
 	struct input_iterator_tag { };
 	struct output_iterator_tag { };
 	struct forward_iterator_tag : public input_iterator_tag { };
@@ -25,7 +24,7 @@ namespace ft
 		typedef T* 								pointer;           
 		typedef ft::random_access_iterator_tag	iterator_category;
 
-		operator										random_access_iterator<const value_type>(void) const;
+		operator	random_access_iterator<const value_type>(void) const;
 		
 /*============================MEMBER FUNCTIONS================================*/
 

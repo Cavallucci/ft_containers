@@ -1,7 +1,7 @@
 #ifndef REVERSE_ITERATOR_HPP
 #define REVERSE_ITERATOR_HPP
 
-#include "iterator_traits.hpp"
+#include "random_access_iterator.hpp"
 #include <iostream>
 
 namespace ft
@@ -18,15 +18,16 @@ namespace ft
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;           
 		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
 
-		operator										reverse_iterator<const value_type>(void) const;
+		operator	reverse_iterator<const value_type>(void) const;
 		
 /*============================MEMBER FUNCTIONS================================*/
 
 		reverse_iterator() {_ptr = 0;};
 
-		reverse_iterator(Iterator ptr): _ptr(ptr) {};
+		explicit reverse_iterator(Iterator ptr): _ptr(ptr) {};
 
-		reverse_iterator(const reverse_iterator &src) : _ptr(src._ptr){};
+		template <class Iter>
+		reverse_iterator(const reverse_iterator<Iter> &src) : _ptr(src.base()){};
 
 		reverse_iterator &operator=(const reverse_iterator &rhs){
 			if (this!= &rhs)
@@ -76,7 +77,7 @@ namespace ft
 		reference operator[](difference_type n) const {
 			return (_ptr[-n - 1]);};
 		
-		pointer base() const {
+		iterator_type base() const {
 			return (_ptr);};
 		
 		friend std::ostream &operator<<(std::ostream &o, reverse_iterator<Iterator> &rhs)
@@ -89,7 +90,7 @@ namespace ft
 	
 	private :
 
-		pointer _ptr;
+		iterator_type _ptr;
 
 	};
 		template <class Iterator>
