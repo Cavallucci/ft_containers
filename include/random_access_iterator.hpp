@@ -2,6 +2,7 @@
 #define RANDOM_ACCESS_ITERATOR_HPP
 
 #include "iterator_traits.hpp"
+#include "enable_if.hpp"
 #include <iostream>
 
 namespace ft

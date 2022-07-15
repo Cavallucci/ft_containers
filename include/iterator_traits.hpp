@@ -3,6 +3,8 @@
 
 #include "random_access_iterator.hpp"
 #include "iterator.hpp"
+# include <cstddef>
+
 
 namespace ft
 {
@@ -23,7 +25,7 @@ namespace ft
 	{
 		public :
 
-		typedef std::ptrdiff_t							difference_type;
+		typedef ptrdiff_t							difference_type;
 		typedef T										value_type;     
 		typedef T*				            		    pointer;             
 		typedef T&										reference;          
@@ -35,7 +37,7 @@ namespace ft
 	{
 		public :
 
-		typedef std::ptrdiff_t								difference_type;
+		typedef ptrdiff_t								difference_type;
 		typedef T										value_type;     
 		typedef const T*		        		        pointer;             
 		typedef const T&								reference;          

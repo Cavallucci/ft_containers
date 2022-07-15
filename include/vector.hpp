@@ -7,6 +7,8 @@
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
 #include "iterator.hpp"
+#include "is_integral.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -60,7 +62,7 @@ namespace ft
 
 		//range constructor
 		template <class InputIterator>
-        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 		{
 			_alloc = alloc;
 
@@ -99,7 +101,7 @@ namespace ft
 
 		//range :
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last)
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 		{
 			if (_start)
 				clear();
@@ -111,7 +113,7 @@ namespace ft
 		{
 			if (_start)
 				clear();
-			insert(begin(), n, val());
+			insert(begin(), n, val);
 		};
 	
 	//-----Get_allocator :
@@ -309,7 +311,7 @@ namespace ft
 		//range :
 
 		template <class InputIterator>
-    	void insert (iterator pos, InputIterator first, InputIterator last)
+    	void insert (iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 		{
 			size_t	index = pos - begin();
 			size_t	count = 0;

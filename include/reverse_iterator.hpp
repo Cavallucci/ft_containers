@@ -2,6 +2,8 @@
 #define REVERSE_ITERATOR_HPP
 
 #include "random_access_iterator.hpp"
+#include "iterator.hpp"
+#include "iterator_traits.hpp"
 #include <iostream>
 
 namespace ft
@@ -18,7 +20,7 @@ namespace ft
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;           
 		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
 
-		operator	reverse_iterator<const value_type>(void) const;
+	//	operator	reverse_iterator<const value_type>(void) const;
 		
 /*============================MEMBER FUNCTIONS================================*/
 
@@ -27,7 +29,7 @@ namespace ft
 		explicit reverse_iterator(Iterator ptr): _ptr(ptr) {};
 
 		template <class Iter>
-		reverse_iterator(const reverse_iterator<Iter> &src) : _ptr(src.base()){};
+		reverse_iterator(const reverse_iterator<Iter>& src) : _ptr(src.base()){};
 
 		reverse_iterator &operator=(const reverse_iterator &rhs){
 			if (this!= &rhs)
@@ -84,18 +86,17 @@ namespace ft
 		{o << *rhs._ptr;
 			return (o);};
 		
-		//template <class Iterator>
-		//reverse_iterator<Iterator>::operator		reverse_iterator<const typename reverse_iterator<Iterator>::value_type>(void) const
-		//	{ return (reverse_iterator<const Iterator>(this->base()));};
+		operator		reverse_iterator<const value_type>(void) const
+			{ return (reverse_iterator<const Iterator>(this->base()));};
 	
 	private :
 
 		iterator_type _ptr;
 
 	};
-		template <class Iterator>
-		reverse_iterator<Iterator>::operator		reverse_iterator<const typename reverse_iterator<Iterator>::value_type>(void) const
-			{ return (reverse_iterator<const Iterator>(this->base()));};
+		// template <class Iterator>
+		// reverse_iterator<Iterator>::operator		reverse_iterator<const typename reverse_iterator<Iterator>::value_type>(void) const
+		// 	{ return (reverse_iterator<const Iterator>(this->base()));};
 /*============================NON-MEMBER FUNCTIONS=============================*/
 
 template< class Iterator1, class Iterator2 >
