@@ -41,17 +41,23 @@ namespace ft
 		reference	operator*() const{
 			return (*_ptr);}
 		
-		reverse_iterator &operator+(difference_type n) const {
+		reverse_iterator operator+(difference_type n) const {
 			return (reverse_iterator(_ptr - n));};
 
-		reverse_iterator &operator-(difference_type n) const {
+		difference_type operator+(reverse_iterator &rev_it) const {
+		 	return (rev_it.base() + this->base());};
+
+		reverse_iterator operator-(difference_type n) const {
 			return (reverse_iterator(_ptr + n));};
+
+		 difference_type operator-(reverse_iterator rev_it) const {
+		  	return (rev_it.base() - this->base());};
 
 		reverse_iterator &operator++(){
 			--_ptr;
 			return (*this);};
 		
-		reverse_iterator &operator++(int) {
+		reverse_iterator operator++(int) {
 			reverse_iterator tmp = *this;
 			--(*this);
 			return (tmp);};
@@ -60,7 +66,7 @@ namespace ft
 			++_ptr;
 			return (*this);};
 
-		reverse_iterator &operator--(int) {
+		reverse_iterator operator--(int) {
 			reverse_iterator tmp = *this;
 			++(*this);
 			return (tmp);};
@@ -86,7 +92,7 @@ namespace ft
 		{o << *rhs._ptr;
 			return (o);};
 		
-		operator		reverse_iterator<const value_type>(void) const
+		operator		reverse_iterator<const iterator_type>(void) const
 			{ return (reverse_iterator<const Iterator>(this->base()));};
 	
 	private :
