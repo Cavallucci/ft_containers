@@ -250,7 +250,7 @@ namespace ft
 
 			Allocator	tmp_alloc;
 			pointer 	tmp_start = tmp_alloc.allocate(n);
-			
+
 			for (size_t i = 0; i < _size ; i++)
 			{
 				_alloc.construct(tmp_start + i, _start[i]);
@@ -258,6 +258,7 @@ namespace ft
 			}
 			_alloc.deallocate(_start, capacity());
 			_start = tmp_start;
+			_capacity = n;
 			_end = _start + n;		
 		};
 

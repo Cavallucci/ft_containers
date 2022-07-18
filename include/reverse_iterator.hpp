@@ -44,13 +44,13 @@ namespace ft
 		reverse_iterator operator+(difference_type n) const {
 			return (reverse_iterator(_ptr - n));};
 
-		difference_type operator+(reverse_iterator &rev_it) const {
+		difference_type operator+(reverse_iterator rev_it) const {
 		 	return (rev_it.base() + this->base());};
 
 		reverse_iterator operator-(difference_type n) const {
 			return (reverse_iterator(_ptr + n));};
 
-		 difference_type operator-(reverse_iterator rev_it) const {
+		difference_type operator-(reverse_iterator rev_it) const {
 		  	return (rev_it.base() - this->base());};
 
 		reverse_iterator &operator++(){
