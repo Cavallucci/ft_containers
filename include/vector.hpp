@@ -294,11 +294,11 @@ namespace ft
 				return;
 			if (_size + count > _capacity)
 				reserve(_size + count);
-
+			
 			for (size_t i = _size; i > index; i--)
 			{
-				_alloc.construct(_start + i + count, *(_start + i)); // si _start == 0 et pas 1, rajouter -1
-				_alloc.destroy(_start + i); // pareil 
+				_alloc.construct(_start + i + count - 1, *(_start + i - 1)); // si _start == 0 et pas 1, rajouter -1
+				_alloc.destroy(_start + i - 1); // pareil 
 			}
 			for (size_t i = 0; i < count; i++)
 			{
@@ -316,15 +316,13 @@ namespace ft
 		{
 			size_t	index = pos - begin();
 			size_t	count = 0;
+			ft::vector<value_type> tmp(first, last);
 			
 			for(;first != last; count++)
 				first++;
 
 			for (size_t	i = 0; i < count; i++)
-				insert( iterator(pos + i), _start[index + i]); //start+pos
-
-			_size += count;
-			_end = _start + _size;		
+				insert(&_start[index + i], tmp[i]); //start+pos		
 		};
 
 	//-----Erase :
@@ -373,6 +371,7 @@ namespace ft
 		{
 			_alloc.destroy(&back());
 			_size--;
+			_end = _start + _size;
 		};
 
 	//-----Resize :
