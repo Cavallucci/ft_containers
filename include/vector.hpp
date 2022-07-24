@@ -78,6 +78,12 @@ namespace ft
 			_start = _alloc.allocate(_size);
 			_end = _start + _size;
 			_capacity = _size * 2;
+
+			for (size_t i = 0; first != last; i++)
+			{
+				_alloc.construct(_start + i, *first);
+				first++;
+			}
 		};
 
 	//-----Destructor :
@@ -127,7 +133,7 @@ namespace ft
 		//normal :
 		reference at( size_type pos )
 		{
-			if (pos >= capacity())
+			if (pos >= _size)
 				throw std::out_of_range("vector:: Out of range");
 			return (*(_start + pos));
 		};
@@ -135,7 +141,7 @@ namespace ft
 		//const :
 		const_reference at(size_type pos) const
 		{
-			if (pos >= capacity())
+			if (pos >= size())
 				throw std::out_of_range("vector:: Out of range");
 			return (*(_start + pos));
 		};
@@ -164,11 +170,11 @@ namespace ft
 
 		//normal :
 	    reference back()
-		{ return (*_end);};
+		{ return (*--end());};
 
 		//const :
 		const_reference back() const
-		{ return (*_end);};
+		{ return (*--end());};
 
 	//-----Data :
 
@@ -266,14 +272,7 @@ namespace ft
 
 	//-----Clear :
 		void clear()
-		{
-			if (_start)
-			{
-				for (size_t i = _size; i > 0; i--)
-					_alloc.destroy(_start + i);
-				_size = 0;
-			}
-		};
+		{ erase(begin(), end());};
 
 	//-----Insert :
 		//single element
@@ -316,13 +315,12 @@ namespace ft
 		{
 			size_t	index = pos - begin();
 			size_t	count = 0;
-			std::allocator<value_type>	tmp;
+			ft::vector<value_type>	tmp(first, last);
 
 			for(;first != last; count++)
 				first++;
-
 			for (size_t	i = 0; i < count; i++)
-				tmp.construct(&_start[index + i], *(first + i)); //start+pos		
+				insert(&_start[index + i], tmp[i]); //start+pos
 		};
 
 	//-----Erase :
@@ -342,19 +340,20 @@ namespace ft
 				first++;
 			while (tmp_first != iterator(_start + start))
 				start++;
-				
 			size_t	end = start + count;
 
 			while (start != end)
 			{
 				_alloc.destroy(_start + start);
-				if (this->end() != last)
-				{
-					insert( iterator(_start + start), _start[start + count]); //insert(_start + start, start + count)
-					_alloc.destroy(_start + count);
-				}
 				start++;
 			}
+			
+			for (size_t i = end; i < _size; i++)
+			{
+				_alloc.construct(&_start[i - count], _start[i]);
+				_alloc.destroy(&_start[i]);
+			}
+			
 			_size -= count;
 			_end = _start + _size;
 			return (first);
