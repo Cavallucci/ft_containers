@@ -316,13 +316,13 @@ namespace ft
 		{
 			size_t	index = pos - begin();
 			size_t	count = 0;
-			ft::vector<value_type> tmp(first, last);
-			
+			std::allocator<value_type>	tmp;
+
 			for(;first != last; count++)
 				first++;
 
 			for (size_t	i = 0; i < count; i++)
-				insert(&_start[index + i], tmp[i]); //start+pos		
+				tmp.construct(&_start[index + i], *(first + i)); //start+pos		
 		};
 
 	//-----Erase :
