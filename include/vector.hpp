@@ -336,9 +336,9 @@ namespace ft
 			size_t		count = 0;
 			iterator	tmp_first = first;
 
-			for(;first != last; count++)
-				first++;
-			while (tmp_first != iterator(_start + start))
+			for(;tmp_first != last; count++)
+				tmp_first++;
+			while (first != iterator(_start + start))
 				start++;
 			size_t	end = start + count;
 
