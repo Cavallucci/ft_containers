@@ -9,6 +9,7 @@
 #include "iterator.hpp"
 #include "is_integral.hpp"
 #include "enable_if.hpp"
+#include "lexicographical_compare.hpp"
 
 namespace ft
 {
@@ -36,6 +37,30 @@ namespace ft
 	
 	//-----Constructors :
 
+		// //empty
+		// //vector() : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
+
+		// //empty container constructor (default constructor)
+		// explicit vector (const allocator_type &alloc = allocator_type()) : _alloc(alloc), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
+
+		// //copy constructor
+		// vector (vector &other) : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL)
+		// { 
+		// 	size_type	i;
+
+		// 	if (this != &other)
+		// 	{
+		// 		_start = _alloc.allocate(other._size);
+		// 		_size = other._size;
+		// 		_end = _start + _size;
+		// 		i = 0;
+		// 		while (i < _size)
+		// 		{
+		// 			_alloc.construct(_start + i, _start[i]);
+		// 			i++;
+		// 		}
+		// 	}
+		// };
 		//empty
 		vector() : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
 
@@ -55,9 +80,12 @@ namespace ft
 			_capacity = count * 2;
 			_end = _start + _size;
 			
-			size_t i = -1;
-			while (i++ < count)
+			size_t i = 0;
+			while (i < count)
+			{
 				_alloc.construct(_start + i, value);
+				i++;
+			}
 		};
 
 		//range constructor
@@ -98,7 +126,7 @@ namespace ft
 
 		vector	&operator=(vector &other)
 		{
-			if (other != *this)
+			if (&other != this)
 				assign(other.begin(), other.end());
 			return (*this);
 		};
@@ -210,11 +238,11 @@ namespace ft
 
 		//normal :
 		iterator end()
-		{ return (iterator(_end));};
+		{ return (iterator(_start + _size));};
 
 		//const :
 		const_iterator end() const
-		{ return (const_iterator(_end));};	
+		{ return (const_iterator(_start + _size));};	
 
 		//reverse :
 		reverse_iterator rend()
@@ -279,16 +307,17 @@ namespace ft
 		iterator insert( iterator pos, const T& value )
 		{
 			size_t	count = 1;
-
+			size_t index = pos - begin();
+			
 			insert(pos, count, value);
-			return pos;
+			return (iterator(_start + index));
 		};
 
 		//fill :  inserts count copies of the value before pos
 		void insert( iterator pos, size_type count, const T& value )
 		{
 			size_t index = pos - begin();
-
+			
 			if (!count)
 				return;
 			if (_size + count > _capacity)
@@ -305,7 +334,6 @@ namespace ft
 				_size++;
 			}
 			_end = _start + _size;
-			
 		};
 
 		//range :
@@ -458,19 +486,7 @@ namespace ft
 	//< :
 	template <class T, class Alloc>
 	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{
-		typename vector<T>::const_iterator tmp_lhs = lhs.begin();
-		typename vector<T>::const_iterator tmp_rhs = rhs.begin();
-
-		while (tmp_lhs != lhs.end() && tmp_rhs != rhs.end())
-		{
-			if (*tmp_lhs >= *tmp_rhs)
-				return (false);
-			tmp_lhs++;
-			tmp_rhs++;
-		}
-		return (true);
-	};
+	{	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));};
 	
 	//<= :
 	template <class T, class Alloc>
