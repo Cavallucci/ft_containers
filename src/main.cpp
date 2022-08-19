@@ -122,24 +122,24 @@ int main(int argc, char** argv) {
 
 int main()
 {
-    std::vector<char>	characters;
+    // std::vector<char>	characters;
 	
-	const std::string extra(6, 'b');
+	// const std::string extra(6, 'b');
 
-	characters.assign(8, 'a');
-	for(size_t i = 0; i < characters.size(); i++)
-    	std::cout << characters[i] << ' ';
-	std::cout << std::endl;
-
-	characters.assign(5, 'b');
-	for(size_t i = 0; i < characters.size(); i++)
-    	std::cout << characters[i] << ' ';
-	std::cout << std::endl;
-
-    // characters.assign(extra.begin(), extra.end());
+	// characters.assign(8, 'a');
 	// for(size_t i = 0; i < characters.size(); i++)
     // 	std::cout << characters[i] << ' ';
 	// std::cout << std::endl;
 
-	//std::cout << "ok\n";
+	// characters.assign(5, 'b');
+	// for(size_t i = 0; i < characters.size(); i++)
+    // 	std::cout << characters[i] << ' ';
+	// std::cout << std::endl;
+
+    // // characters.assign(extra.begin(), extra.end());
+	// // for(size_t i = 0; i < characters.size(); i++)
+    // // 	std::cout << characters[i] << ' ';
+	// // std::cout << std::endl;
+
+	// //std::cout << "ok\n";
 }

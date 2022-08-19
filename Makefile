@@ -18,13 +18,16 @@ FLAGS	= -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
 INCLUDE	= include
 
-SRC_PATH	= src
+SRC_PATH	= 42TESTERS-CONTAINERS/VECTOR/mains/
 
 OBJ_PATH	= obj
 
-SOURCES =	main.cpp
+SOURCES = at_main.cpp
+#main.cpp
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))
+#42TESTERS-CONTAINERS/VECTOR/mains/at_main.cpp
+#$(addprefix $(SRC_PATH)/,$(SOURCES))
 
 OBJ	= $(addprefix $(OBJ_PATH)/,$(SOURCES:.cpp=.o))
 

@@ -2,6 +2,7 @@
 #define LEXICOGRAPHICAL_COMPARE_HPP
 
 #include "vector.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {

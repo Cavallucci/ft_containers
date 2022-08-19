@@ -68,11 +68,11 @@ namespace ft
 		explicit vector (const allocator_type &alloc) : _alloc(alloc), _start(NULL), _size(0), _capacity(0), _end(NULL) {};
 
 		//copy constructor
-		vector (vector &other) : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL)
+		vector (const vector &other) : _alloc(allocator_type()), _start(NULL), _size(0), _capacity(0), _end(NULL)
 		{ *this = other; };
 
 		//fill constructor
-		explicit vector( size_type count, const T& value = T(), const Allocator& alloc = Allocator())
+		explicit vector( size_type count, const value_type &value = value_type(), const Allocator& alloc = Allocator())
 		{
 			_alloc = alloc;
 			_start = _alloc.allocate(count * 2);
@@ -124,7 +124,7 @@ namespace ft
 
 	//-----Operator= :
 
-		vector	&operator=(vector &other)
+		vector	&operator=(vector const &other)
 		{
 			if (&other != this)
 				assign(other.begin(), other.end());
@@ -291,8 +291,8 @@ namespace ft
 				_alloc.destroy(_start + i);
 			}
 			_alloc.deallocate(_start, capacity());
-			_start = tmp_start;
 			_capacity = n;
+			_start = tmp_start;
 			_end = _start + n;		
 		};
 
@@ -317,11 +317,19 @@ namespace ft
 		void insert( iterator pos, size_type count, const T& value )
 		{
 			size_t index = pos - begin();
-			
+			size_t new_cap = 0;
+
 			if (!count)
 				return;
+			
+			if (_capacity == 0)
+			 	new_cap = 1;
+			else
+			 	new_cap = _size * 2;
+			if (new_cap < _size + count)
+			 	new_cap = _size + count;
 			if (_size + count > _capacity)
-				reserve(_size + count);
+				reserve(new_cap);
 			
 			for (size_t i = _size; i > index; i--)
 			{
