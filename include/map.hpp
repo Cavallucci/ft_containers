@@ -7,6 +7,23 @@
 
 namespace ft
 {
+    template <class T>
+    struct tnode
+    {
+        T   _value;
+        tnode   *_left_node;
+        tnode   *_right_node;
+        tnode   *_parent_node;
+        int     _balance;
+        int     _height;
+        bool    _end;
+
+        tnode(T value, tnode *left_node, tnode *right_node, tnode *parent_node, int balance, int height, bool end)
+        : _value(value), _left_node(left_node), _right_node(right_node), _parent_node(parent_node), _balance(balance), _height(height), _end(end){};
+
+        
+    }
+
 	template < class Key
      , class T
      , class Compare = std::less<Key>

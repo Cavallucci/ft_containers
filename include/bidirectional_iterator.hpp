@@ -32,14 +32,14 @@
 		reference	operator*() const{
 			return (*_ptr);}
 		
-		bidirectional_iterator &operator++(){
-			++_ptr;
-			return (*this);};
+		 bidirectional_iterator &operator++(){
+		 	++_ptr;
+		 	return (*this);};
 		
-		// bidirectional_iterator operator++(int) {
-		// 	bidirectional_iterator tmp = *this;
-		// 	++(*this);
-		// 	return (tmp);};
+		//  bidirectional_iterator operator++(int) {
+		//  	bidirectional_iterator tmp = *this;
+		//  	++(*this);
+		//  	return (tmp);};
 		
 		bidirectional_iterator &operator--(){
 			--_ptr;
