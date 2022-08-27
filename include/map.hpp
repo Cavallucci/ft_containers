@@ -10,10 +10,10 @@ namespace ft
     template <class T>
     struct tnode
     {
-        T   _value;
-        tnode   *_left_node;
-        tnode   *_right_node;
-        tnode   *_parent_node;
+        T       _value;
+        tnode*  _left_node;
+        tnode*  _right_node;
+        tnode*  _parent_node;
         int     _balance;
         int     _height;
         bool    _end;
