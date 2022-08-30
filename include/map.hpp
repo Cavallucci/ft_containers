@@ -4,6 +4,7 @@
 #include <iostream>
 #include "vector.hpp"
 #include "bidirectional_iterator.hpp"
+#include "pair.hpp"
 
 namespace ft
 {
@@ -206,7 +207,43 @@ namespace ft
             tmp = find(k);
             if (k == end())
                 insert(value_type(k, mapped_type()));
+            tmp = find(k);
             return ((*tmp).second);
+        };
+
+//---------------Modifiers :
+
+	//-----Clear :
+
+		void clear()
+		{ /*destroy*/ };
+
+	//-----Insert :
+
+		//single element
+        pair<iterator,bool> insert (const value_type& val)
+        {
+            //size ++ en fonction du nb d'element inserer
+            //find key, si found = return sur l'iterator existant
+            //sort by key
+
+            //null height = -1 //single node height = 0 // rest height = max(subtree left, subtree right) +1 
+            //Balance Factor = (Height of Left Subtree - Height of Right Subtree) 
+            //if balance is > 0 = left heavy //if balance < 0 = right heavy
+
+        };
+
+        //with hint
+        iterator insert (iterator position, const value_type& val)
+        {
+
+        };
+
+        //range
+        template <class InputIterator>
+        void insert (InputIterator first, InputIterator last)
+        {
+
         };
     }
 }
