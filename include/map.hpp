@@ -223,14 +223,13 @@ namespace ft
 		//single element
         pair<iterator,bool> insert (const value_type& val)
         {
-            //size ++ en fonction du nb d'element inserer
-            //find key, si found = return sur l'iterator existant
-            //sort by key
+            size_t  tmp_size = size();
+            bool    inserted = false;
 
-            //null height = -1 //single node height = 0 // rest height = max(subtree left, subtree right) +1 
-            //Balance Factor = (Height of Left Subtree - Height of Right Subtree) 
-            //if balance is > 0 = left heavy //if balance < 0 = right heavy
-
+            _root = createInsertNode(val, _root, NULL);
+            if (size() != tmp_size)
+                inserted = true;
+            return (pair<iterator, bool>(getNodeFromKey(val.first, _root), inserted));
         };
 
         //with hint
