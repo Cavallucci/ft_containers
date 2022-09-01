@@ -235,14 +235,47 @@ namespace ft
         //with hint
         iterator insert (iterator position, const value_type& val)
         {
-
+            (void)position;
+            insert(val);
+            return (getNodeFromKey(val.first, _root));
         };
 
         //range
         template <class InputIterator>
-        void insert (InputIterator first, InputIterator last)
+        void insert (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
         {
-
+            while (first != last)
+            {
+                insert(*first);
+                first++;
+            }
         };
     }
+    //-----Erase :
+
+		//position :
+		void erase (iterator position)
+        {
+            erase(position->first);
+        };
+
+		//key :
+		size_type erase (const key_type& k)
+        {
+            size_t  tmp_size;
+
+            tmp_size = size();
+            _root = deleteNode(_root, k);
+            if (tmp_size != size())
+                return (1);
+            return (0);
+        };
+
+        //first, last :
+        void erase (iterator first, iterator last)
+        {
+            while (first != last)
+                erase(first++);
+        };
+
 }

@@ -50,7 +50,7 @@ node_type *insertNode(node_type *node, const value_type& val, node_type *parent)
         }
     }
     return (node);
-}
+};
 
 // New node creation
 node_type *newNode(const value_type& val, node_type *parent) 
@@ -59,7 +59,7 @@ node_type *newNode(const value_type& val, node_type *parent)
     _alloc.construct(tmp, node_type(val, NULL, NULL, parent, 0, 0, false));
     _size++;
     return (tmp);
-}
+};
 
 node_type*  createInsertNode(const value_type& val, node_type* node, node_type* parent)
 {
@@ -87,7 +87,7 @@ node_type*  createInsertNode(const value_type& val, node_type* node, node_type* 
     }
     //---Insert node
     return (insertNode(val, curr, parent));
-}
+};
 
 node_type*  getNodeFromKey(const key_type& key, node_type* node)
 {
@@ -99,5 +99,5 @@ node_type*  getNodeFromKey(const key_type& key, node_type* node)
         return (getNodeFromKey(key, node->right_node));
     else
         return (node);
-}
+};
 
