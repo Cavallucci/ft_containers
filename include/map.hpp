@@ -175,7 +175,7 @@ namespace ft
 		const_reverse_iterator rend() const
 		{ return (const_reverse_iterator(begin()));};
 
-//---------------Capacity :
+//---------------root :
 
 	//-----Empty :
 
@@ -278,4 +278,31 @@ namespace ft
                 erase(first++);
         };
 
+    //-----Swap :
+
+        void swap( map& other )
+        {
+            node_allocator  tmp_alloc;
+            key_compare     tmp_compare;
+            size_type       tmp_size;
+            node_type*      tmp_root;
+
+			if (other != *this)
+			{
+				tmp_alloc = other._alloc;
+				tmp_compare = other._compare;
+				tmp_size = other._size;
+				tmp_root = other._root;
+
+				other._alloc = _alloc;
+				other._compare = _compare;
+				other._size = _size;
+				other._root = _root;
+
+				_alloc = tmp_alloc;
+				_compare = tmp_compare;
+				_size = tmp_size;
+				_root = tmp_root;
+            }
+        }
 }
