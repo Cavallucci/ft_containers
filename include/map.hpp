@@ -5,6 +5,7 @@
 #include "vector.hpp"
 #include "bidirectional_iterator.hpp"
 #include "pair.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -89,7 +90,13 @@ namespace ft
 
         //empty
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-        : _alloc(alloc), _compare(comp), _size(0), _root(NULL) {};
+        : _alloc(alloc), _compare(comp), _size(0), _root(NULL) 
+        {
+            insert(value_type(key_type(), mapped_type()));
+            _root->_end = true;
+            if (_size > 0)
+                _size--;
+        };
         
         //range
         template <class InputIterator>
@@ -106,9 +113,25 @@ namespace ft
     //-----Destructor :
 
 		~map()
-		{	
-			//destroy
-		};
+		{ destroyAll(_root); };
+
+    //-----Operator= :
+
+        map& operator= (const map& x)
+        {
+            if (this != &x)
+            {
+                destroyAll(_root);
+                insert(x.begin(), x.end());
+            }
+            return (*this);
+        };
+
+    //-----Get allocator :
+
+        allocator_type get_allocator() const
+        { return (_alloc); };
+
 //---------------Iterators :
 
 	//-----Begin :
@@ -175,7 +198,7 @@ namespace ft
 		const_reverse_iterator rend() const
 		{ return (const_reverse_iterator(begin()));};
 
-//---------------root :
+//---------------Capacity :
 
 	//-----Empty :
 
@@ -216,7 +239,7 @@ namespace ft
 	//-----Clear :
 
 		void clear()
-		{ /*destroy*/ };
+		{ destroyAll(_root); };
 
 	//-----Insert :
 
@@ -250,7 +273,7 @@ namespace ft
                 first++;
             }
         };
-    }
+
     //-----Erase :
 
 		//position :
@@ -304,5 +327,438 @@ namespace ft
 				_size = tmp_size;
 				_root = tmp_root;
             }
+        };
+
+//---------------Lookup :
+
+    //-----Count :
+
+        size_type count (const key_type& k) const
+        {
+            if (getConstNodeFromKey(l, _root))
+                return (1);
+            return (0);
+        };
+    
+    //-----Find :
+
+        iterator find (const key_type& k)
+        {
+            iterator    tmp = begin();
+
+            while (tmp != end() && (*tmp).first != k)
+                tmp++;
+            return (tmp);
+        };
+
+        //const
+        const_iterator find (const key_type& k) const
+        {
+            const_iterator    tmp = begin();
+
+            while (tmp != end() && (*tmp).first != k)
+                tmp++;
+            return (tmp);
+        };
+
+    //-----Equal range :
+
+        //const
+        pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        { return (ft::make_pair(lower_bound(k), upper_bound(k))); };
+
+        pair<iterator,iterator> equal_range (const key_type& k)
+        { return (ft::make_pair(lower_bound(k), upper_bound(k))); };
+    
+    //-----Lower bound :
+
+        iterator lower_bound (const key_type& k)
+        {
+            iterator    tmp = begin();
+            key_compare tmp_key = key_comp();
+
+            while (tmp != end() && tmp_comp((*it).first, k))
+                tmp++;
+            return (tmp);
+        };
+
+        //const
+        const_iterator lower_bound (const key_type& k) const
+        {
+            const_iterator  tmp = begin();
+            key_compare     tmp_key = key_comp();
+
+            while (tmp != end() && tmp_comp((*it).first, k))
+                tmp++;
+            return (tmp);
+        };
+    
+    //-----Upper bound :
+
+        iterator upper_bound (const key_type& k)
+        {
+            iterator    tmp = begin();
+            key_compare tmp_key = key_comp();
+
+            while (tmp != end() && tmp_comp((*it).first, k))
+                tmp++;
+            if (tmp != end() && (*tmp).first == k)
+                tmp++;
+            return (tmp);
         }
+
+        //const
+        const_iterator upper_bound (const key_type& k) const
+        {
+            const_iterator    tmp = begin();
+            key_compare tmp_key = key_comp();
+
+            while (tmp != end() && tmp_comp((*it).first, k))
+                tmp++;
+            if (tmp != end() && (*tmp).first == k)
+                tmp++;
+            return (tmp);
+        }
+
+//---------------Observers :
+
+    //-----Key comp :
+
+        key_compare key_comp() const
+        { return (_compare); };
+
+    //-----Value comp :
+
+        value_compare value_comp() const
+        { return (value_compare(key_compare())); };
+
+
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/*===========================================================================================*/
+/*================================== AVL FUNCTIONS ==========================================*/
+/*===========================================================================================*/
+/*===========================================================================================*/
+/*===========================================================================================*/
+
+
+        // Calculate _height
+        int getHeight(node_type *N) 
+        {
+            if (N == NULL)
+                return 0;
+            return N->_height;
+        }
+
+        int max(int a, int b) 
+        { return (a > b) ? a : b; };
+
+        // Rotate _right_node
+        node_type *rightRotate(node_type *y) 
+        {
+            node_type *x = y->_left_node;
+            node_type *T2 = x->_right_node;
+            x->_right_node = y;
+            y->_left_node = T2;
+            y->_height = max(_height(y->_left_node), _height(y->_right_node)) + 1;
+            x->_height = max(_height(x->_left_node), _height(x->_right_node)) +	1;
+            return x;
+        }
+
+        // Rotate _left_node
+        node_type *leftRotate(node_type *x) 
+        {
+            node_type *y = x->_right_node;
+            node_type *T2 = y->_left_node;
+            y->_left_node = x;
+            x->_right_node = T2;
+            x->_height = max(_height(x->_left_node), _height(x->_right_node)) +	1;
+            y->_height = max(_height(y->_left_node), _height(y->_right_node)) +	1;
+            return y;
+        }
+
+        // Get the balance factor of each node
+        int getBalance(node_type *N) 
+        {
+            if (N == NULL)
+                return 0;
+            return _height(N->_left_node) - _height(N->_right_node);
+        }
+
+        // node_type with minimum value
+        node_type *nodeWithMimumValue(node_type *node) 
+        {
+            node_type *current = node;
+            while (current->_left_node != NULL)
+                current = current->_left_node;
+            return current;
+        }
+
+        void	destroyAll(node_type *node)
+        {
+            if (!node)
+                return;
+            destroyAll(node->_left_node);
+            destroyAll(node->right_node);
+            _alloc.destroy(node);
+            _alloc.deallocate(node, 1);
+            if (_size > 0)
+                _size--;
+            if (node == _root)
+                _root = 0;
+        };
+
+
+        // Insert a node
+        node_type *insertNode(node_type *node, const value_type& val, node_type *parent) 
+        {
+        //--- Find the correct postion and insert the node
+            if (node == NULL)
+                return (newNode(val, parent));
+            //si la recursive est finis
+            if (node->_end == true)
+            {
+                node_type*  new_node;
+
+                new_node = newNode(val, parent);
+                new_node->_height = 1;
+                node->_parent_node = new_node;
+                new_node->_right_node = new_node;
+                return (new_node);
+            }
+            //recursive 
+            if (val.first < node->_value.first)
+                node->_left_node = insertNode(node->_left_node, val, node);
+            else if (val.first > node->_value.first)
+                node->_right_node = insertNode(node->_right_node, val, node);
+            else
+                return (node);
+
+        //--- Update the balance factor of each node and balance the tree
+            node->_height = 1 + max(getHeight(node->_left_node), getHeight(node->_right_node));
+            int balance = getBalance(node);
+
+            if (balance > 1) 
+            {
+                if (val < node->_left_node->val) 
+                    return rightRotate(node);
+                else if (val > node->_left_node->val) 
+                {
+                    node->_left_node = leftRotate(node->_left_node);
+                    return rightRotate(node);
+                }
+            }
+            if (balance < -1) 
+            {
+                if (val > node->_right_node->val) 
+                    return leftRotate(node);
+                else if (val < node->_right_node->val) 
+                {
+                    node->_right_node = rightRotate(node->_right_node);
+                    return leftRotate(node);
+                }
+            }
+            return (node);
+        };
+
+        // New node creation
+        node_type *newNode(const value_type& val, node_type *parent) 
+        {
+            node_type *tmp = _alloc.allocate(1);
+            _alloc.construct(tmp, node_type(val, NULL, NULL, parent, 0, 0, false));
+            _size++;
+            return (tmp);
+        };
+
+        node_type*  createInsertNode(const value_type& val, node_type* node, node_type* parent)
+        {
+            //---Create a root
+            if (!_root)
+            {
+                _root = newNode(val, NULL);
+                node_type*  last_node = newNode(value_type(key_type(), mapped_type(), _root));
+                _size--;
+                _root->_right_node = last_node;
+                last_node->_end = true;
+                _root->height = 0;
+                return (_root);
+            }
+            //---Create new root if only 1 node
+            if (_root->_end)
+            {
+                node_type*  new_root = newNode(val, NULL);
+
+                _root->_parent_node = new_root;
+                new_root->_right_node = _root;
+                new_root->_height = 0;
+                _root = new_root;
+                return (_root);
+            }
+            //---Insert node
+            return (insertNode(val, curr, parent));
+        };
+
+        node_type*  getNodeFromKey(const key_type& key, node_type* node)
+        {
+            if (!node || node->_end)
+                return NULL;
+            if (key < node->_value.first)
+                return (getNodeFromKey(key, node->left_node));
+            else if (key > node->_value.first)
+                return (getNodeFromKey(key, node->right_node));
+            else
+                return (node);
+        };
+
+        node_type*  getConstNodeFromKey(const key_type& key, node_type* node) const
+        {
+            if (!node || node->_end)
+                return NULL;
+            if (key < node->_value.first)
+                return (getConstNodeFromKey(key, node->left_node));
+            else if (key > node->_value.first)
+                return (getConstNodeFromKey(key, node->right_node));
+            else
+                return (node);
+        };
+
+        node_type *nodeWithMimumValue(node_type *node) 
+        {
+            node_type *current = node;
+            while (current->_left_node != NULL)
+                current = current->_left_node;
+            return current;
+        }
+
+        node_type *deleteNode(node_type *node, const key_type& key) 
+        {
+        // Find the node and delete it
+            if (node == NULL)
+                return node;
+            if (key < node->_value.first)
+                node->_left_node = deleteNode(node->_left_node, key);
+            else if (key > node->_value.first)
+                node->_right_node = deleteNode(node->_right_node, key); //end of recursive when k found
+            else 
+            {
+                if ((node->_left_node == NULL) || (node->_right_node == NULL)) // if 1 or 0 child
+                {
+                    node_type *tmp
+                    if (node->_left_node)
+                        tmp = node->_left_node
+                    else
+                        tmp = node->_right_node;
+                    if (tmp == NULL) // if 0 child
+                    {
+                        tmp = node;
+                        _alloc.destroy(tmp);
+                        _alloc.deallocate(tmp, 1);
+                        node = NULL;
+                        _size--;
+                    } 
+                    else // if 1 child
+                    {
+                        node_type*	tmp2;
+                        tmp->_parent_node = node->_parent_node;
+                        tmp2 = node;
+                        node = tmp;
+                        _alloc.destroy(tmp2);
+                        _alloc.deallocate(tmp2, 1);
+                        _size--;
+
+                    }
+                }
+                else // if 2 child
+                {
+                    node_type *tmp;
+                    if (node->_right_node->_end == false)
+                        tmp = nodeWithMimumValue(node->_right_node); //tmp node juste after
+                    else
+                        tmp = node->_left_node;
+                    if (tmp != node->_right_node) // reverse parent and child 
+                    {
+                        tmp->_right_node = node->right_node;
+                        node->_right_node->_parent_node = tmp;
+                    }
+                    tmp->_left_node = node->_left_node;
+                    node->_left_node->_parent_node = tmp;
+                    tmp->_parent_node->_left_node = NULL; // not forget second child
+                    tmp->_parent_node = node->_parent_node; //bypassing node to delete
+                    if (_root == node)
+                        _root = tmp;
+                    _alloc.destroy(node);
+                    _alloc.deallocate(node, 1);
+                    _size--;
+                    node = tmp; // change node to point at the one who was deleted
+                }
+            }
+
+            if (node == NULL)
+                return (node);
+            // Update the balance factor of each node and balance the tree
+            node->_height = 1 + max(_height(node->_left_node), _height(node->_right_node));
+            int balance = getBalance(node);
+            //rotations
+            if (balance > 1) 
+            {
+                if (getBalance(node->_left_node) >= 0) 
+                    return rightRotate(node);
+                else
+                {
+                    node->_left_node = leftRotate(node->_left_node);
+                    return rightRotate(node);
+                }
+            }
+            if (balance < -1) 
+            {
+                if (getBalance(node->_right_node) <= 0)
+                    return leftRotate(node);
+                else
+                {
+                    node->_right_node = rightRotate(node->_right_node);
+                    return leftRotate(node);
+                }
+            }
+            return node;
+        }
+/*===========================================================================================*/
+/*===========================================================================================*/
+    };
+/*--------------------------------NON MEMBER FUNCTION--------------------------------*/
+
+template <class Key, class T, class Compare, class Alloc>
+  bool operator== ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{
+    if (lhs.size() != rhs.size())
+        return (false);
+    return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+};
+	
+template <class Key, class T, class Compare, class Alloc>
+  bool operator!= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{ return (!(lhs == rhs)); };
+	
+template <class Key, class T, class Compare, class Alloc>
+  bool operator<  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{ return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));};
+
+template <class Key, class T, class Compare, class Alloc>
+  bool operator<= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{ return (lhs < rhs || lhs == rhs); };
+	
+template <class Key, class T, class Compare, class Alloc>
+  bool operator>  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{ return (rhs < lhs); };
+
+template <class Key, class T, class Compare, class Alloc>
+  bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+{ return (lhs > rhs || lhs == rhs); };
+
+template <class Key, class T, class Compare, class Alloc>
+  void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y)
+{
+    x.swap(y);
+};
+
 }
