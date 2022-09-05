@@ -10,6 +10,15 @@
 namespace ft
 {
     template <class T>
+	struct less : std::binary_function<T, T, bool>
+	{
+		bool operator()(const T & x, const T & y) const
+		{
+			return (x < y);
+		};
+	};
+
+    template <class T>
     struct tnode
     {
         T       _value;
@@ -24,14 +33,14 @@ namespace ft
         : _value(value), _left_node(left_node), _right_node(right_node), _parent_node(parent_node), _balance(balance), _height(height), _end(end){};
 
         ~tnode() {};
-    }
+    };
 
 /*================================== MAP ==========================================*/
 
 	template < class Key
      , class T
-     , class Compare = std::less<Key>
-     , class Allocator = std::allocator<std::pair<const Key, T>>>
+     , class Compare = ft::less<Key>
+     , class Allocator = std::allocator<std::pair<const Key, T> > >
     class map
 	{
         public :
@@ -40,16 +49,17 @@ namespace ft
 
         typedef Key                                                         key_type;
         typedef T                                                           mapped_type;
-        typedef pair<const key_type,mapped_type>                            value_type;
+        typedef pair<const Key, T>                           value_type;
         typedef Compare                                                     key_compare;
-        typedef Allo                                                        allocator_type;
-        typedef allocator_type::reference                                   reference;
-        typedef allocator_type::const_reference                             const_reference;
-        typedef allocator_type::pointer                                     pointer;
-        typedef allocator_type::const_pointer                               const_pointer;
-        typedef allocator_type::difference_type                             difference_type;
-        typedef allocator_type::size_type                                   size_type;
-        typedef tnode<value_type>                                           node_type;
+        typedef tnode<value_type>						                    node_type;
+        typedef Allocator                                                   allocator_type;
+        typedef typename allocator_type::template rebind<node_type>::other  node_allocator;
+        typedef typename allocator_type::reference                          reference;
+        typedef typename allocator_type::const_reference                    const_reference;
+        typedef typename allocator_type::pointer                            pointer;
+        typedef typename allocator_type::const_pointer                      const_pointer;
+        typedef typename allocator_type::difference_type                    difference_type;
+        typedef typename allocator_type::size_type                          size_type;
         typedef ft::bidirectional_iterator<value_type, node_type*>          iterator;
         typedef ft::bidirectional_iterator<const value_type, node_type*>    const_iterator;
         typedef ft::reverse_iterator<iterator>                              reverse_iterator;
@@ -62,6 +72,7 @@ namespace ft
         size_type       _size;
         node_type*      _root;
 
+        public :
 /*--------------------------------MEMBER CLASS-----------------------------------*/
 
         class value_compare
@@ -92,6 +103,7 @@ namespace ft
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _compare(comp), _size(0), _root(NULL) 
         {
+            std::cout << "construct empty\n";
             insert(value_type(key_type(), mapped_type()));
             _root->_end = true;
             if (_size > 0)
@@ -100,15 +112,18 @@ namespace ft
         
         //range
         template <class InputIterator>
-        map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
-        const allocator_type& alloc = allocator_type())
+        map (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _compare(comp), _size(0), _root(NULL)
-        { insert(first, last); };
+        { 
+            std::cout << "construct range\n";
+            insert(first, last); };
 
         //copy
         map (const map& x)
-        : _alloc(alloc), _compare(comp), _size(0), _root(NULL)
-        { *this = x; };
+        : _alloc(x._alloc), _compare(x._comp), _size(0), _root(NULL)
+        { 
+            std::cout << "construct copy\n";
+            *this = x; };
 
     //-----Destructor :
 
@@ -139,7 +154,8 @@ namespace ft
 		//normal :
 		iterator begin()
 		{ 
-            node_type   tmp;
+            std::cout << "begiiiin\n";
+            node_type*   tmp;
 
             tmp = _root;
             while (tmp && tmp->_left_node)
@@ -150,7 +166,9 @@ namespace ft
 		//const :
 		const_iterator begin() const
 		{ 
-            node_type   tmp;
+            std::cout << "begiiiin\n";
+
+            node_type*   tmp;
 
             tmp = _root;
             while (tmp && tmp->_left_node)
@@ -170,11 +188,14 @@ namespace ft
 
 		//normal :
 		iterator end()
-		{ 
-            node_type   tmp;
+		{
+            std::cout << "eeeend\n";
+
+            node_type*   tmp;
+            std::cout << "eeeend\n";
 
             tmp = _root;
-            while (tmp && tmp->_right_node)
+            while (tmp && tmp->_end == false)
                 tmp = tmp->_right_node;
             return (iterator(tmp));
         };
@@ -182,10 +203,11 @@ namespace ft
 		//const :
 		const_iterator end() const
 		{ 
-            node_type   tmp;
-
+            std::cout << "eeend\n";
+            node_type*   tmp;
+        
             tmp = _root;
-            while (tmp && tmp->_right_node)
+            while (tmp && tmp->_end == false)
                 tmp = tmp->_right_node;
             return (const_iterator(tmp));
         };	
@@ -335,7 +357,7 @@ namespace ft
 
         size_type count (const key_type& k) const
         {
-            if (getConstNodeFromKey(l, _root))
+            if (getConstNodeFromKey(k, _root))
                 return (1);
             return (0);
         };
@@ -377,7 +399,7 @@ namespace ft
             iterator    tmp = begin();
             key_compare tmp_key = key_comp();
 
-            while (tmp != end() && tmp_comp((*it).first, k))
+            while (tmp != end() && tmp_key((*tmp).first, k))
                 tmp++;
             return (tmp);
         };
@@ -388,7 +410,7 @@ namespace ft
             const_iterator  tmp = begin();
             key_compare     tmp_key = key_comp();
 
-            while (tmp != end() && tmp_comp((*it).first, k))
+            while (tmp != end() && tmp_key((*tmp).first, k))
                 tmp++;
             return (tmp);
         };
@@ -400,7 +422,7 @@ namespace ft
             iterator    tmp = begin();
             key_compare tmp_key = key_comp();
 
-            while (tmp != end() && tmp_comp((*it).first, k))
+            while (tmp != end() && tmp_key((*tmp).first, k))
                 tmp++;
             if (tmp != end() && (*tmp).first == k)
                 tmp++;
@@ -413,7 +435,7 @@ namespace ft
             const_iterator    tmp = begin();
             key_compare tmp_key = key_comp();
 
-            while (tmp != end() && tmp_comp((*it).first, k))
+            while (tmp != end() && tmp_key((*tmp).first, k))
                 tmp++;
             if (tmp != end() && (*tmp).first == k)
                 tmp++;
@@ -461,8 +483,8 @@ namespace ft
             node_type *T2 = x->_right_node;
             x->_right_node = y;
             y->_left_node = T2;
-            y->_height = max(_height(y->_left_node), _height(y->_right_node)) + 1;
-            x->_height = max(_height(x->_left_node), _height(x->_right_node)) +	1;
+            y->_height = max(get_height(y->_left_node), get_height(y->_right_node)) + 1;
+            x->_height = max(get_height(x->_left_node), get_height(x->_right_node)) +	1;
             return x;
         }
 
@@ -473,26 +495,24 @@ namespace ft
             node_type *T2 = y->_left_node;
             y->_left_node = x;
             x->_right_node = T2;
-            x->_height = max(_height(x->_left_node), _height(x->_right_node)) +	1;
-            y->_height = max(_height(y->_left_node), _height(y->_right_node)) +	1;
+            x->_height = max(get_height(x->_left_node), get_height(x->_right_node)) +	1;
+            y->_height = max(get_height(y->_left_node), get_height(y->_right_node)) +	1;
             return y;
         }
+
+        int get_height(node_type *node)
+		{
+		    if (!node)
+                return (0);
+		    return (node->_height);
+		}
 
         // Get the balance factor of each node
         int getBalance(node_type *N) 
         {
             if (N == NULL)
                 return 0;
-            return _height(N->_left_node) - _height(N->_right_node);
-        }
-
-        // node_type with minimum value
-        node_type *nodeWithMimumValue(node_type *node) 
-        {
-            node_type *current = node;
-            while (current->_left_node != NULL)
-                current = current->_left_node;
-            return current;
+            return get_height(N->_left_node) - get_height(N->_right_node);
         }
 
         void	destroyAll(node_type *node)
@@ -500,7 +520,7 @@ namespace ft
             if (!node)
                 return;
             destroyAll(node->_left_node);
-            destroyAll(node->right_node);
+            destroyAll(node->_right_node);
             _alloc.destroy(node);
             _alloc.deallocate(node, 1);
             if (_size > 0)
@@ -541,9 +561,9 @@ namespace ft
 
             if (balance > 1) 
             {
-                if (val < node->_left_node->val) 
+                if (val < node->_left_node->_value) 
                     return rightRotate(node);
-                else if (val > node->_left_node->val) 
+                else if (val > node->_left_node->_value) 
                 {
                     node->_left_node = leftRotate(node->_left_node);
                     return rightRotate(node);
@@ -551,9 +571,9 @@ namespace ft
             }
             if (balance < -1) 
             {
-                if (val > node->_right_node->val) 
+                if (val > node->_right_node->_value) 
                     return leftRotate(node);
-                else if (val < node->_right_node->val) 
+                else if (val < node->_right_node->_value) 
                 {
                     node->_right_node = rightRotate(node->_right_node);
                     return leftRotate(node);
@@ -577,16 +597,17 @@ namespace ft
             if (!_root)
             {
                 _root = newNode(val, NULL);
-                node_type*  last_node = newNode(value_type(key_type(), mapped_type(), _root));
+                node_type*  last_node = newNode(value_type(key_type(), mapped_type()), _root);
                 _size--;
                 _root->_right_node = last_node;
                 last_node->_end = true;
-                _root->height = 0;
+                _root->_height = 0;
                 return (_root);
             }
             //---Create new root if only 1 node
             if (_root->_end)
             {
+            std::cout << "createinsertnode1\n";
                 node_type*  new_root = newNode(val, NULL);
 
                 _root->_parent_node = new_root;
@@ -596,7 +617,7 @@ namespace ft
                 return (_root);
             }
             //---Insert node
-            return (insertNode(val, curr, parent));
+            return (insertNode(node, val, parent));
         };
 
         node_type*  getNodeFromKey(const key_type& key, node_type* node)
@@ -604,9 +625,9 @@ namespace ft
             if (!node || node->_end)
                 return NULL;
             if (key < node->_value.first)
-                return (getNodeFromKey(key, node->left_node));
+                return (getNodeFromKey(key, node->_left_node));
             else if (key > node->_value.first)
-                return (getNodeFromKey(key, node->right_node));
+                return (getNodeFromKey(key, node->_right_node));
             else
                 return (node);
         };
@@ -644,9 +665,9 @@ namespace ft
             {
                 if ((node->_left_node == NULL) || (node->_right_node == NULL)) // if 1 or 0 child
                 {
-                    node_type *tmp
+                    node_type *tmp;
                     if (node->_left_node)
-                        tmp = node->_left_node
+                        tmp = node->_left_node;
                     else
                         tmp = node->_right_node;
                     if (tmp == NULL) // if 0 child
@@ -762,3 +783,4 @@ template <class Key, class T, class Compare, class Alloc>
 };
 
 }
+#endif

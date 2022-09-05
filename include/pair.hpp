@@ -38,8 +38,8 @@ namespace ft
         {
             if (this != &pr)
             {
-                pr.first = first;
-                pr.second = second;
+                first = pr.first;
+                second = pr.second;
             }
             return (*this);
         };
@@ -49,8 +49,8 @@ namespace ft
 /*--------------------------------NON-MEMBER FUNCTION--------------------------------*/
 
     template< class T1, class T2 >
-    std::pair<T1,T2> make_pair( T1 t, T2 u )
-    { return ( pair<T1,T2>(x,y) ); };
+    pair<T1,T2> make_pair( T1 t, T2 u )
+    { return ( pair<T1,T2>(t,u) ); };
 
     template <class T1, class T2>
     bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
