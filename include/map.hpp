@@ -89,9 +89,7 @@ namespace ft
                 typedef value_type second_argument_type;
                 
                 bool operator() (const value_type& x, const value_type& y) const
-                {
-                    return comp(x.first, y.first);
-                };
+                { return comp(x.first, y.first); };
         };
 /*--------------------------------MEMBER FUNCTION--------------------------------*/
 
@@ -103,7 +101,6 @@ namespace ft
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _compare(comp), _size(0), _root(NULL) 
         {
-            std::cout << "construct empty\n";
             insert(value_type(key_type(), mapped_type()));
             _root->_end = true;
             if (_size > 0)
@@ -114,16 +111,12 @@ namespace ft
         template <class InputIterator>
         map (typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _compare(comp), _size(0), _root(NULL)
-        { 
-            std::cout << "construct range\n";
-            insert(first, last); };
+        { insert(first, last); };
 
         //copy
         map (const map& x)
         : _alloc(x._alloc), _compare(x._comp), _size(0), _root(NULL)
-        { 
-            std::cout << "construct copy\n";
-            *this = x; };
+        { *this = x; };
 
     //-----Destructor :
 
@@ -154,7 +147,6 @@ namespace ft
 		//normal :
 		iterator begin()
 		{ 
-            std::cout << "begiiiin\n";
             node_type*   tmp;
 
             tmp = _root;
@@ -166,8 +158,6 @@ namespace ft
 		//const :
 		const_iterator begin() const
 		{ 
-            std::cout << "begiiiin\n";
-
             node_type*   tmp;
 
             tmp = _root;
@@ -189,10 +179,7 @@ namespace ft
 		//normal :
 		iterator end()
 		{
-            std::cout << "eeeend\n";
-
             node_type*   tmp;
-            std::cout << "eeeend\n";
 
             tmp = _root;
             while (tmp && tmp->_end == false)
@@ -203,9 +190,8 @@ namespace ft
 		//const :
 		const_iterator end() const
 		{ 
-            std::cout << "eeend\n";
             node_type*   tmp;
-        
+
             tmp = _root;
             while (tmp && tmp->_end == false)
                 tmp = tmp->_right_node;
@@ -477,27 +463,42 @@ namespace ft
         { return (a > b) ? a : b; };
 
         // Rotate _right_node
-        node_type *rightRotate(node_type *y) 
+        node_type *rightRotate(node_type *parent) 
         {
-            node_type *x = y->_left_node;
-            node_type *T2 = x->_right_node;
-            x->_right_node = y;
-            y->_left_node = T2;
-            y->_height = max(get_height(y->_left_node), get_height(y->_right_node)) + 1;
-            x->_height = max(get_height(x->_left_node), get_height(x->_right_node)) +	1;
-            return x;
+            node_type *left_child = parent->_left_node;
+            node_type *right_child = left_child->_right_node;
+
+            left_child->_right_node = parent;
+            left_child->_parent_node = parent->_parent_node;
+            parent->_left_node = right_child;
+            if (left_child->_end == false)
+					parent->_parent_node = left_child;
+			if (right_child)
+				right_child->_parent_node = parent;
+
+            parent->_height = max(get_height(parent->_left_node), get_height(parent->_right_node)) + 1;
+            left_child->_height = max(get_height(left_child->_left_node), get_height(left_child->_right_node)) +	1;
+
+            return (left_child);
         }
 
         // Rotate _left_node
-        node_type *leftRotate(node_type *x) 
+        node_type *leftRotate(node_type *parent) 
         {
-            node_type *y = x->_right_node;
-            node_type *T2 = y->_left_node;
-            y->_left_node = x;
-            x->_right_node = T2;
-            x->_height = max(get_height(x->_left_node), get_height(x->_right_node)) +	1;
-            y->_height = max(get_height(y->_left_node), get_height(y->_right_node)) +	1;
-            return y;
+            node_type *right_child = parent->_right_node;
+            node_type *left_child = right_child->_left_node;
+
+            right_child->_left_node = parent;
+            right_child->_parent_node = parent->_parent_node;
+            parent->_right_node = left_child;
+            if (right_child->_end == false)
+					parent->_parent_node = right_child;
+			if (left_child)
+				left_child->_parent_node = parent;
+
+            parent->_height = max(get_height(parent->_left_node), get_height(parent->_right_node)) + 1;
+			right_child->_height = max(get_height(right_child->_left_node), get_height(right_child->_right_node)) + 1;
+            return (right_child);
         }
 
         int get_height(node_type *node)
@@ -512,7 +513,7 @@ namespace ft
         {
             if (N == NULL)
                 return 0;
-            return get_height(N->_left_node) - get_height(N->_right_node);
+            return (get_height(N->_left_node) - get_height(N->_right_node));
         }
 
         void	destroyAll(node_type *node)
@@ -534,7 +535,7 @@ namespace ft
         node_type *insertNode(node_type *node, const value_type& val, node_type *parent) 
         {
         //--- Find the correct postion and insert the node
-            if (node == NULL)
+            if (!node)
                 return (newNode(val, parent));
             //si la recursive est finis
             if (node->_end == true)
@@ -544,40 +545,60 @@ namespace ft
                 new_node = newNode(val, parent);
                 new_node->_height = 1;
                 node->_parent_node = new_node;
-                new_node->_right_node = new_node;
+                new_node->_right_node = node;
                 return (new_node);
             }
             //recursive 
-            if (val.first < node->_value.first)
+            if (_compare(val.first, node->_value.first))
                 node->_left_node = insertNode(node->_left_node, val, node);
-            else if (val.first > node->_value.first)
+            else if (_compare(node->_value.first, val.first))
                 node->_right_node = insertNode(node->_right_node, val, node);
             else
                 return (node);
 
         //--- Update the balance factor of each node and balance the tree
             node->_height = 1 + max(getHeight(node->_left_node), getHeight(node->_right_node));
-            int balance = getBalance(node);
 
-            if (balance > 1) 
+			key_type left_key;
+			if (node->_left_node)
+				left_key = node->_left_node->_value.first;
+            else
+				left_key = key_type();
+
+            int balance = getBalance(node);
+            // if (balance > 1) 
+            // {
+            //     if (val < node->_left_node->_value) 
+            //         return rightRotate(node);
+            //     else if (val > node->_left_node->_value) 
+            //     {
+            //         node->_left_node = leftRotate(node->_left_node);
+            //         return rightRotate(node);
+            //     }
+            // }
+            // if (balance < -1) 
+            // {
+            //     if (val > node->_right_node->_value) 
+            //         return leftRotate(node);
+            //     else if (val < node->_right_node->_value) 
+            //     {
+            //         node->_right_node = rightRotate(node->_right_node);
+            //         return leftRotate(node);
+            //     }
+            // }
+            if (balance > 1 && getBalance(node->_left_node) >= 0)
+                return (rightRotate(node));
+            if (balance > 1 && getBalance(node->_left_node) < 0)
             {
-                if (val < node->_left_node->_value) 
-                    return rightRotate(node);
-                else if (val > node->_left_node->_value) 
-                {
-                    node->_left_node = leftRotate(node->_left_node);
-                    return rightRotate(node);
-                }
+                node->_left_node = leftRotate(node->_left_node);
+                return (rightRotate(node));
             }
-            if (balance < -1) 
+            if (balance < -1 && getBalance(node->_right_node) <= 0)
+                return (leftRotate(node));
+            if (balance < -1 && getBalance(node->_right_node) > 0)
             {
-                if (val > node->_right_node->_value) 
-                    return leftRotate(node);
-                else if (val < node->_right_node->_value) 
-                {
-                    node->_right_node = rightRotate(node->_right_node);
-                    return leftRotate(node);
-                }
+                node->_right_node = rightRotate(node->_right_node);
+                return (leftRotate(node));
             }
             return (node);
         };
@@ -607,7 +628,6 @@ namespace ft
             //---Create new root if only 1 node
             if (_root->_end)
             {
-            std::cout << "createinsertnode1\n";
                 node_type*  new_root = newNode(val, NULL);
 
                 _root->_parent_node = new_root;
@@ -624,9 +644,9 @@ namespace ft
         {
             if (!node || node->_end)
                 return NULL;
-            if (key < node->_value.first)
+            if (_compare(key, node->_value.first))
                 return (getNodeFromKey(key, node->_left_node));
-            else if (key > node->_value.first)
+            else if (_compare(node->_value.first, key))
                 return (getNodeFromKey(key, node->_right_node));
             else
                 return (node);
@@ -636,9 +656,9 @@ namespace ft
         {
             if (!node || node->_end)
                 return NULL;
-            if (key < node->_value.first)
+            if (_compare(key, node->_value.first))
                 return (getConstNodeFromKey(key, node->left_node));
-            else if (key > node->_value.first)
+            else if (_compare(node->_value.first, key))
                 return (getConstNodeFromKey(key, node->right_node));
             else
                 return (node);
@@ -655,11 +675,11 @@ namespace ft
         node_type *deleteNode(node_type *node, const key_type& key) 
         {
         // Find the node and delete it
-            if (node == NULL)
+            if (node == NULL || node->_end == true)
                 return node;
-            if (key < node->_value.first)
+            if (_compare(key, node->_value.first))
                 node->_left_node = deleteNode(node->_left_node, key);
-            else if (key > node->_value.first)
+            else if (_compare(node->_value.first, key))
                 node->_right_node = deleteNode(node->_right_node, key); //end of recursive when k found
             else 
             {
