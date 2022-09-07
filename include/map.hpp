@@ -115,7 +115,7 @@ namespace ft
 
         //copy
         map (const map& x)
-        : _alloc(x._alloc), _compare(x._comp), _size(0), _root(NULL)
+        : _alloc(x._alloc), _compare(x._compare), _size(0), _root(NULL)
         { *this = x; };
 
     //-----Destructor :
@@ -233,13 +233,12 @@ namespace ft
 
 	    T& operator[] (const key_type& k)
 		{ 
-            iterator tmp;
-
-            tmp = find(k);
-            if (k == end())
-                insert(value_type(k, mapped_type()));
-            tmp = find(k);
-            return ((*tmp).second);
+            node_type   *node = getNodeFromKey(k, _root);
+            
+            if (node)
+                return (node->_value.second);
+            insert(value_type(k, mapped_type()));
+            return (getNodeFromKey(k, _root)->_value.second);
         };
 
 //---------------Modifiers :
@@ -657,9 +656,9 @@ namespace ft
             if (!node || node->_end)
                 return NULL;
             if (_compare(key, node->_value.first))
-                return (getConstNodeFromKey(key, node->left_node));
+                return (getConstNodeFromKey(key, node->_left_node));
             else if (_compare(node->_value.first, key))
-                return (getConstNodeFromKey(key, node->right_node));
+                return (getConstNodeFromKey(key, node->_right_node));
             else
                 return (node);
         };
@@ -719,7 +718,7 @@ namespace ft
                         tmp = node->_left_node;
                     if (tmp != node->_right_node) // reverse parent and child 
                     {
-                        tmp->_right_node = node->right_node;
+                        tmp->_right_node = node->_right_node;
                         node->_right_node->_parent_node = tmp;
                     }
                     tmp->_left_node = node->_left_node;
@@ -738,7 +737,7 @@ namespace ft
             if (node == NULL)
                 return (node);
             // Update the balance factor of each node and balance the tree
-            node->_height = 1 + max(_height(node->_left_node), _height(node->_right_node));
+            node->_height = 1 + max(get_height(node->_left_node), get_height(node->_right_node));
             int balance = getBalance(node);
             //rotations
             if (balance > 1) 
@@ -771,9 +770,19 @@ namespace ft
 template <class Key, class T, class Compare, class Alloc>
   bool operator== ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
 {
+    typename ft::map<Key, T, Compare, Alloc>::const_iterator    tmp_lhs = lhs.begin();
+    typename ft::map<Key, T, Compare, Alloc>::const_iterator    tmp_rhs = rhs.begin();
+
     if (lhs.size() != rhs.size())
         return (false);
-    return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+    while (tmp_rhs != rhs.end() && tmp_lhs != lhs.end())
+    {
+        if (*tmp_rhs != *tmp_lhs)
+            return (false);
+        tmp_rhs++;
+        tmp_lhs++;
+    }
+    return (true);
 };
 	
 template <class Key, class T, class Compare, class Alloc>
