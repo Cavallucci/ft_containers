@@ -18,16 +18,13 @@ FLAGS	= -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 
 INCLUDE	= include
 
-SRC_PATH	= 42TESTERS-CONTAINERS/VECTOR/mains/
+SRC_PATH	= src
 
 OBJ_PATH	= obj
 
-SOURCES = at_main.cpp
-#main.cpp
+SOURCES = main.cpp
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))
-#42TESTERS-CONTAINERS/VECTOR/mains/at_main.cpp
-#$(addprefix $(SRC_PATH)/,$(SOURCES))
 
 OBJ	= $(addprefix $(OBJ_PATH)/,$(SOURCES:.cpp=.o))
 
@@ -47,7 +44,7 @@ $(NAME): $(OBJ)
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(INCLUDE)
 	@mkdir -p obj
 	@$(CC) $(FLAGS) -I$(INCLUDE) -c -o $@ $<
-	@echo "$(BLUE)gcc $(WHITE)$(notdir $@)$(NOC)"
+	@echo "$(BLUE)clang $(WHITE)$(notdir $@)$(NOC)"
 
 clean:
 	@echo "$(RED)clean$(NOC)"
