@@ -60,6 +60,36 @@ void	printVectorstd(std::vector<int> vec)
 	}
 }
 
+void	printmap(ft::map<int, std::string> map)
+{
+    ft::map<int, std::string>::iterator begin;
+    ft::map<int, std::string>::iterator end;
+
+    begin = map.begin();
+    end = map.end();
+
+    while (begin != end)
+	{
+		std::cout << begin->first << " : " << begin->second << std::endl;
+		begin++;
+	}
+}
+
+void	printmapstd(std::map<int, std::string> map)
+{
+    std::map<int, std::string>::iterator begin;
+    std::map<int, std::string>::iterator end;
+
+    begin = map.begin();
+    end = map.end();
+
+    while (begin != end)
+	{
+		std::cout << begin->first << " : " << begin->second << std::endl;
+		begin++;
+	}
+}
+
 int main()
 {
     std::cout << BLUE << std::endl << "-----------------------------------------------------------------" << NOC;
@@ -134,4 +164,124 @@ int main()
     printVectorstd(stdvec2);
     std::cout << std::endl;
 
+    std::cout << YELLOW << "clear()" << NOC << std::endl;
+	std::cout << "ftvec2.clear();" << std::endl;
+	ftvec2.clear();
+    printVector(ftvec2);
+	std::cout << "stdvec2.clear();" << std::endl;
+	stdvec2.clear();
+    printVectorstd(stdvec2);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "empty()" << NOC << std::endl;
+	std::cout << "ftvec2.empty() : " << ftvec2.empty() << std::endl;
+	std::cout << "stdvec2.empty() : " << stdvec2.empty() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "insert() fill" << NOC << std::endl;
+	std::cout << "ftvec2.insert(ftvec2.begin(), 2, 8);" << std::endl;
+	ftvec2.insert(ftvec2.begin(), 2, 8);
+    printVector(ftvec2);
+    std::cout << "stdvec2.insert(stdvec2.begin(), 2, 8);" << std::endl;
+	stdvec2.insert(stdvec2.begin(), 2, 8);
+    printVectorstd(stdvec2);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "insert() single" << NOC << std::endl;
+	std::cout << "ftvec2.insert(ftvec2.begin(), 42);" << std::endl;
+	ftvec2.insert(ftvec2.begin(), 42);
+    printVector(ftvec2);
+    std::cout << "stdvec2.insert(stdvec2.begin(), 42);" << std::endl;
+	stdvec2.insert(stdvec2.begin(), 42);
+    printVectorstd(stdvec2);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "operator[]" << NOC << std::endl;
+	std::cout << "ftvec2[3]: " << ftvec2[2] << std::endl;
+	std::cout << "stdvec2[3]: " << stdvec2[2] << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "front()" << NOC << std::endl;
+    std::cout << "ftvec2.front(): " << ftvec2.front() << std::endl;
+    std::cout << "stdvec2.front(): " << stdvec2.front() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "operator>" << NOC << std::endl;
+	std::cout << "(ftvec1 > ftvec2): " << (ftvec1 > ftvec2) << std::endl;
+	std::cout << "(stdvec1 > stdvec2): " << (stdvec1 > stdvec2) << std::endl;
+    std::cout << std::endl;
+
+
+    std::cout << BLUE << std::endl << "-----------------------------------------------------------------" << NOC;
+    std::cout << BLUE << std::endl << "------------------------- TESTS  MAP ----------------------------" << NOC;
+    std::cout << BLUE << std::endl << "-----------------------------------------------------------------" << NOC << std::endl << std::endl;
+
+    std::cout << YELLOW << "default constructor" << NOC << std::endl;
+    std::cout << "ft::map<int, std::string> ftmap1;" << std::endl;
+    ft::map<int, std::string> ftmap1;
+    printmap(ftmap1);
+    std::cout << "std::map<int, std::string> stdmap1;" << std::endl;
+    std::map<int, std::string> stdmap1;
+    printmapstd(stdmap1);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "insert() // single element" << NOC << std::endl;
+    std::cout << "ft::pair<int, std::string> pair_one = ft::make_pair(65, \"A\");" << std::endl;
+    std::cout << "ft::pair<int, std::string> pair_two = ft::make_pair(66, \"B\");" << std::endl;
+    std::cout << "ft::pair<int, std::string> pair_three = ft::make_pair(67, \"C\");" << std::endl;
+    ft::pair<int, std::string> pair_one = ft::make_pair(65, "A");
+    ft::pair<int, std::string> pair_two = ft::make_pair(66, "B");
+    ft::pair<int, std::string> pair_three = ft::make_pair(67, "C");
+    std::cout << "ftmap1.insert(pair_one);"	<< std::endl;
+	std::cout << "ftmap1.insert(pair_two);"	<< std::endl;
+	std::cout << "ftmap1.insert(pair_three);"	<< std::endl;
+    ftmap1.insert(pair_one);
+    ftmap1.insert(pair_two);
+    ftmap1.insert(pair_three);
+    printmap(ftmap1);
+    std::cout << "std::pair<int, std::string> stdpair_one = std::make_pair(65, \"A\");" << std::endl;
+    std::cout << "std::pair<int, std::string> stdpair_two = std::make_pair(66, \"B\");" << std::endl;
+    std::cout << "std::pair<int, std::string> stdpair_three = std::make_pair(67, \"C\");" << std::endl;
+    std::pair<int, std::string> stdpair_one = std::make_pair(65, "A");
+    std::pair<int, std::string> stdpair_two = std::make_pair(66, "B");
+    std::pair<int, std::string> stdpair_three = std::make_pair(67, "C");
+    std::cout << "stdmap1.insert(stdpair_one);"	<< std::endl;
+	std::cout << "stdmap1.insert(stdpair_two);"	<< std::endl;
+	std::cout << "stdmap1.insert(stdpair_three);"	<< std::endl;
+    stdmap1.insert(stdpair_one);
+    stdmap1.insert(stdpair_two);
+    stdmap1.insert(stdpair_three);
+    printmapstd(stdmap1);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "swap()" << NOC << std::endl;
+	std::cout << "ftmap2.swap(ftmap1);" << std::endl;
+    ft::map<int, std::string> ftmap2;
+	ftmap2.swap(ftmap1);
+    printmap(ftmap2);
+    std::cout << "stdmap2.swap(stdmap1);" << std::endl;
+    std::map<int, std::string> stdmap2;
+	stdmap2.swap(stdmap1);
+    printmapstd(stdmap2);
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "rbegin()" << NOC << std::endl;
+    std::cout << "ftmap2.rbegin()->first : " << ftmap2.rbegin()->first << std::endl;
+    std::cout << "stdmap2.rbegin()->first : " << stdmap2.rbegin()->first << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "find()" << NOC << std::endl;
+    std::cout << "ftmap2.find(66)->second: " << ftmap2.find(66)->second << std::endl;
+    std::cout << "stdmap2.find(66)->second: " << stdmap2.find(66)->second << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "lower_bound()" << NOC << std::endl;
+	std::cout << "ftmap2.lower_bound(66)->second: " << ftmap2.lower_bound(66)->second << std::endl;
+	std::cout << "stdmap2.lower_bound(66)->second: " << stdmap2.lower_bound(66)->second << std::endl;
+    std::cout << std::endl;
+
+    std::cout << YELLOW << "upper_bound()" << NOC << std::endl;
+	std::cout << "ftmap2.upper_bound(66)->second: " << ftmap2.upper_bound(66)->second << std::endl;
+	std::cout << "stdmap2.upper_bound(66)->second: " << stdmap2.upper_bound(66)->second << std::endl;
+    std::cout << std::endl;
 }
